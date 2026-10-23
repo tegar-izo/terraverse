@@ -1,0 +1,14 @@
+[
+  {
+    "nama": "ChaNote.new",
+    "deskripsi": "Aplikasi jurnal harian, rasa matcha",
+    "ikonUrl": "https://raw.githubusercontent.com/tegar-izo/chanote.new/refs/heads/main/public/icon.svg",
+    "url": "https://tegar-izo.github.io/chanote.new/"
+  },
+  {
+    "nama": "PDFKuy",
+    "deskripsi": "Gabung, split, kompres, sampe watermark — semuanya jalan di browser kamu. Nggak ada upload, nggak ada login, nggak ada drama. ",
+    "ikonUrl": "https://raw.githubusercontent.com/tegar-izo/pdfkuy/refs/heads/main/public/icon-maskable.svg",
+    "url": "https://tegar-izo.github.io/pdfkuy/"
+  }
+]

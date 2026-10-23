@@ -1,0 +1,201 @@
+/* ===== Token warna Material 3 — utama hijau pastel ===== */
+:root {
+  --radius-l: 32px;
+  --radius-m: 24px;
+  --radius-s: 16px;
+  --font-body: "Paper Mono", ui-monospace, "Cascadia Mono", system-ui, monospace;
+  --font-ikon: "Material Symbols Rounded";
+}
+
+/* ===== Font Paper Mono (self-hosted) ===== */
+@font-face {
+  font-family: "Paper Mono";
+  src: url("/fonts/PaperMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Paper Mono";
+  src: url("/fonts/PaperMono-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Paper Mono";
+  src: url("/fonts/PaperMono-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Paper Mono";
+  src: url("/fonts/PaperMono-ExtraBold.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ===== Ikon Material Symbols (self-hosted, variabel FILL) ===== */
+@font-face {
+  font-family: "Material Symbols Rounded";
+  src: url("/fonts/MaterialSymbolsRounded.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+.msr {
+  font-family: var(--font-ikon);
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  line-height: 1;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  letter-spacing: normal;
+  text-transform: none;
+  font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+  user-select: none;
+  vertical-align: middle;
+}
+
+.msr--isi {
+  font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+/* Ikon bawaan input tanggal: pasti terang di gelap, gelap di terang */
+[data-tema="gelap"] input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.87) sepia(0.25) saturate(2.4) hue-rotate(78deg); /* tonjol hijau pastel */
+}
+
+/* Terang */
+:root,
+[data-tema="terang"] {
+  color-scheme: light; /* widget asli browser (pemilih tanggal, panah select) ikut tema terang */
+  --md-primary: #3e7d52;
+  --md-on-primary: #ffffff;
+  --md-primary-container: #c9eed3;
+  --md-on-primary-container: #14442a;
+  --md-surface: #fafcf8;
+  --md-surface-container: #eef5ee;
+  --md-surface-container-high: #e4efe5;
+  --md-on-surface: #1a201b;
+  --md-on-surface-variant: #444b44;
+  --md-outline-variant: #cbd5cb;
+  --md-error: #b3261e;
+  --shadow-kartu: 0 0 0 1px var(--md-outline-variant);
+}
+
+/* Gelap */
+[data-tema="gelap"] {
+  color-scheme: dark; /* ikon bawaan browser jadi terang, bukan hitam */
+  --md-primary: #8fd3a4;
+  --md-on-primary: #10381f;
+  --md-primary-container: #2b5239;
+  --md-on-primary-container: #c9eed3;
+  --md-surface: #131715;
+  --md-surface-container: #1d231f;
+  --md-surface-container-high: #28302a;
+  --md-on-surface: #e8ece7;
+  --md-on-surface-variant: #c2cabe;
+  --md-outline-variant: #46554c;
+  --md-error: #f2b8b5;
+  --shadow-kartu: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--md-surface);
+  color: var(--md-on-surface);
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* Komponen dasar bersama */
+.kartu {
+  background: var(--md-surface-container);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-kartu);
+}
+
+.tombol {
+  border: none;
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 0.6rem 1.1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  background: var(--md-primary);
+  color: var(--md-on-primary);
+}
+
+.tombol--stengah {
+  background: transparent;
+  color: var(--md-primary);
+  box-shadow: inset 0 0 0 1.5px var(--md-primary);
+}
+
+.tombol--efekteks {
+  background: transparent;
+  color: var(--md-primary);
+}
+
+.tombol--berbahaya {
+  background: transparent;
+  color: var(--md-error);
+  box-shadow: inset 0 0 0 1.5px var(--md-error);
+}
+
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--md-on-surface);
+  background: var(--md-surface-container-high);
+  border: none;
+  outline: none;
+  border-radius: var(--radius-s);
+  padding: 0.65rem 0.85rem;
+  width: 100%;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  box-shadow: 0 0 0 2px var(--md-primary);
+}
+
+label.bidang {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--md-on-surface-variant);
+}
+
+label.bidang input,
+label.bidang select,
+label.bidang textarea {
+  margin-top: 0.35rem;
+  font-weight: 400;
+  color: var(--md-on-surface);
+}
