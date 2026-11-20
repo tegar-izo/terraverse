@@ -15,12 +15,6 @@ const MENU = [
 
 const masukkan = ref(null);
 const temaAktif = ref(document.documentElement.dataset.tema || "terang");
-const tertutup = ref(localStorage.getItem("terraverse.sidebar") === "tutup");
-
-function alihkanSisi() {
-  tertutup.value = !tertutup.value;
-  localStorage.setItem("terraverse.sidebar", tertutup.value ? "tutup" : "buka");
-}
 
 onMounted(() => {
   temaAktif.value = document.documentElement.dataset.tema || "terang";
@@ -49,309 +43,399 @@ function pilihFile(e) {
 </script>
 
 <template>
-  <div class="cangkang" :class="{ 'cangkang-tutup': tertutup }">
-    <!-- ===== Sidebar (desktop) ===== -->
-    <aside class="bilah-sisi">
-      <div class="merek">
-        <span class="logo msr msr--isi">planet</span>
-        <div class="teks-merek">
-          <h1>Terraverse</h1>
-          <p>my space, my universe</p>
+  <div class="md-shell">
+    <!-- ===== Navigation drawer (expanded ≥1200px) ===== -->
+    <aside class="md-nav-drawer" aria-label="Navigasi utama">
+      <div class="drawer-brand">
+        <span class="msr msr--isi drawer-brand__logo">planet</span>
+        <div>
+          <h1 class="md-title-medium">Terraverse</h1>
+          <p class="md-body-small drawer-brand__sub">my space, my universe</p>
         </div>
-        <button
-          class="tombol-gulir mini"
-          :title="tertutup ? 'Tampilkan sidebar' : 'Sembunyikan sidebar (ikon saja)'"
-          @click="alihkanSisi"
-        >
-          <span class="msr">{{ tertutup ? "left_panel_open" : "left_panel_close" }}</span>
-        </button>
       </div>
 
-      <nav class="nav-utama">
+      <nav class="drawer-nav">
         <button
           v-for="m of MENU"
           :key="m.id"
-          class="butir-nav"
-          :class="{ aktif: halaman === m.id }"
+          class="md-nav-item"
+          :class="{ 'md-nav-item--aktif': halaman === m.id }"
+          :data-uji="`nav-${m.id}`"
+          :aria-current="halaman === m.id ? 'page' : null"
           @click="pindahHalaman(m.id)"
         >
-          <span class="msr ikon">{{ m.ikon }}</span><span class="teks">{{ m.label }}</span>
+          <span class="md-nav-item__ikon">
+            <span class="msr" :class="{ 'msr--isi': halaman === m.id }">{{ m.ikon }}</span>
+          </span>
+          <span>{{ m.label }}</span>
         </button>
       </nav>
 
-      <div class="bawah-sisi">
-        <button class="tombol tombol--stengah" @click="unduhEkspor" title="Ekspor Data">
-          <span class="msr">download</span><span class="teks"> Ekspor Data</span>
+      <div class="drawer-foot">
+        <button class="md-list-item" title="Ekspor data" @click="unduhEkspor">
+          <span class="msr">download</span>
+          <span class="md-label-large">Ekspor data</span>
         </button>
-        <button class="tombol tombol--stengah" @click="masukkan.click()" title="Impor Data">
-          <span class="msr">upload</span><span class="teks"> Impor Data</span>
+        <button class="md-list-item" title="Impor data" @click="masukkan.click()">
+          <span class="msr">upload</span>
+          <span class="md-label-large">Impor data</span>
         </button>
-        <input
-          ref="masukkan"
-          type="file"
-          accept="application/json,.json"
-          hidden
-          @change="pilihFile"
-        />
         <button
-          class="tombol-tema"
+          class="md-list-item"
+          :title="ikutSistem() ? 'Tema: ikut sistem' : 'Tema: pilihanmu'"
+          @click="klikTema"
+        >
+          <span class="msr msr--isi">{{ temaAktif === "gelap" ? "light_mode" : "dark_mode" }}</span>
+          <span class="md-label-large">
+            {{ temaAktif === "gelap" ? "Tema terang" : "Tema gelap" }}
+          </span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ===== Navigation rail (600–1199px) ===== -->
+    <nav class="md-nav-rail" aria-label="Navigasi utama">
+      <button
+        class="md-icon-button rail-brand"
+        title="Terraverse"
+        @click="pindahHalaman('beranda')"
+      >
+        <span class="msr msr--isi">planet</span>
+      </button>
+
+      <button
+        v-for="m of MENU"
+        :key="m.id"
+        class="rail-item"
+        :data-uji="`nav-${m.id}`"
+        :aria-current="halaman === m.id ? 'page' : null"
+        @click="pindahHalaman(m.id)"
+      >
+        <span class="rail-indikator">
+          <span class="msr" :class="{ 'msr--isi': halaman === m.id }">{{ m.ikon }}</span>
+        </span>
+        <span class="md-label-medium">{{ m.label }}</span>
+      </button>
+
+      <div class="rail-foot">
+        <button class="md-icon-button" title="Ekspor data" @click="unduhEkspor">
+          <span class="msr">download</span>
+        </button>
+        <button class="md-icon-button" title="Impor data" @click="masukkan.click()">
+          <span class="msr">upload</span>
+        </button>
+        <button
+          class="md-icon-button"
           :title="ikutSistem() ? 'Tema: ikut sistem' : 'Tema: pilihanmu'"
           @click="klikTema"
         >
           <span class="msr msr--isi">{{ temaAktif === "gelap" ? "light_mode" : "dark_mode" }}</span>
         </button>
       </div>
-    </aside>
+    </nav>
 
-    <!-- ===== Konten ===== -->
-    <main class="konten">
-      <header class="kepala-seluler">
-        <div class="merek-mini msr msr--isi merek-mini-ikon">planet<b>Terraverse</b></div>
-        <div class="aksi-mini">
-          <button class="mini" @click="unduhEkspor" title="Ekspor data"><span class="msr">download</span></button>
-          <button class="mini" @click="masukkan.click()" title="Impor data"><span class="msr">upload</span></button>
-          <button class="mini" @click="klikTema" title="Ganti tema">
+    <!-- ===== Top app bar + konten (compact) ===== -->
+    <div class="shell-main">
+      <header class="md-top-app-bar">
+        <div class="topbar-brand">
+          <span class="msr msr--isi">planet</span>
+          <b class="md-title-medium">Terraverse</b>
+        </div>
+        <div class="topbar-aksi">
+          <button class="md-icon-button" title="Ekspor data" @click="unduhEkspor">
+            <span class="msr">download</span>
+          </button>
+          <button class="md-icon-button" title="Impor data" @click="masukkan.click()">
+            <span class="msr">upload</span>
+          </button>
+          <button class="md-icon-button" title="Ganti tema" @click="klikTema">
             <span class="msr msr--isi">{{ temaAktif === "gelap" ? "light_mode" : "dark_mode" }}</span>
           </button>
         </div>
       </header>
 
-      <BerandaView v-if="halaman === 'beranda'" />
-      <TugasView v-else-if="halaman === 'tugas'" />
-      <KalenderView v-else />
-    </main>
+      <main class="md-content">
+        <Transition name="md-view" mode="out-in">
+          <BerandaView v-if="halaman === 'beranda'" key="beranda" />
+          <TugasView v-else-if="halaman === 'tugas'" key="tugas" />
+          <KalenderView v-else key="kalender" />
+        </Transition>
+      </main>
+    </div>
 
-    <!-- ===== Bottom bar (mobile) ===== -->
-    <nav class="bilah-bawah">
+    <!-- ===== Navigation bar (compact <600px) ===== -->
+    <nav class="md-nav-bar" aria-label="Navigasi utama">
       <button
         v-for="m of MENU"
         :key="m.id"
-        class="butir-bawah"
-        :class="{ aktif: halaman === m.id }"
+        class="navbar-item"
+        :data-uji="`nav-${m.id}`"
+        :aria-current="halaman === m.id ? 'page' : null"
         @click="pindahHalaman(m.id)"
       >
-        <span class="msr">{{ m.ikon }}</span><small>{{ m.label }}</small>
+        <span class="navbar-indikator">
+          <span class="msr" :class="{ 'msr--isi': halaman === m.id }">{{ m.ikon }}</span>
+        </span>
+        <span class="md-label-medium">{{ m.label }}</span>
       </button>
     </nav>
+
+    <input
+      ref="masukkan"
+      type="file"
+      accept="application/json,.json"
+      hidden
+      @change="pilihFile"
+    />
   </div>
 </template>
 
 <style scoped>
-.cangkang {
+.md-shell {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: minmax(0, 1fr);
   min-height: 100vh;
+  background: var(--md-surface);
 }
 
-/* Sidebar */
-.bilah-sisi {
-  background: var(--md-surface-container);
-  padding: 1.5rem 1rem;
-  display: flex;
+.md-content {
+  min-width: 0;
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding: 8px 16px calc(104px + env(safe-area-inset-bottom));
+}
+
+.shell-main {
+  min-width: 0;
+}
+
+/* ---------- Drawer ---------- */
+.md-nav-drawer {
+  display: none;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 8px;
   position: sticky;
   top: 0;
   height: 100vh;
-  width: 280px;
-  transition: width 0.2s ease;
-  overflow: hidden;
-}
-.cangkang {
-  transition: grid-template-columns 0.2s ease;
+  overflow: auto;
+  padding: 16px 12px;
+  background: var(--md-surface-container-low);
 }
 
-/* ===== Mode sisi tertutup: rail ikon-saja ===== */
-.cangkang-tutup {
-  grid-template-columns: 76px 1fr;
-}
-.cangkang-tutup .bilah-sisi {
-  width: 76px;
-  padding: 1.5rem 0.75rem;
-}
-.cangkang-tutup .teks,
-.cangkang-tutup .teks-merek {
-  display: none;
-}
-.cangkang-tutup .merek {
-  justify-content: center;
-}
-.cangkang-tutup .butir-nav,
-.cangkang-tutup .bawah-sisi .tombol {
-  justify-content: center;
-  padding-inline: 0;
-}
-.cangkang-tutup .butir-nav .ikon {
-  font-size: 1.2rem;
-}
-
-.merek {
+.drawer-brand {
   display: flex;
-  gap: 0.75rem;
   align-items: center;
+  gap: 12px;
+  padding: 8px 12px 20px;
 }
-.logo {
-  font-size: 2.4rem;
+
+.drawer-brand__logo {
+  font-size: 40px;
   color: var(--md-primary);
 }
-.merek h1 {
-  font-size: 1.4rem;
-  margin: 0;
-}
-.merek p {
-  margin: 0.1rem 0 0;
-  font-size: 0.8rem;
+
+.drawer-brand__sub {
+  margin-top: 2px;
   color: var(--md-on-surface-variant);
   font-style: italic;
 }
 
-.nav-utama {
+.drawer-nav {
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 4px;
 }
-.butir-nav {
+
+.drawer-foot {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--md-outline-variant);
   display: flex;
-  gap: 0.75rem;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.drawer-foot .md-list-item {
+  min-height: 48px;
+}
+
+/* ---------- Rail ---------- */
+.md-nav-rail {
+  display: none;
+  flex-direction: column;
   align-items: center;
-  padding: 0.75rem 1rem;
+  gap: 8px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 12px 0;
+  background: var(--md-surface);
+  border-right: 1px solid var(--md-outline-variant);
+}
+
+.rail-brand {
+  color: var(--md-primary);
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+.rail-brand .msr {
+  font-size: 28px;
+}
+
+.rail-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 72px;
+  padding: 4px 0;
   border: none;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 600;
   background: transparent;
   color: var(--md-on-surface-variant);
-  border-radius: 999px;
-}
-.butir-nav:hover {
-  background: var(--md-surface-container-high);
-}
-.butir-nav.aktif {
-  background: var(--md-primary-container);
-  color: var(--md-on-primary-container);
+  cursor: pointer;
+  font-family: inherit;
 }
 
-.tombol-gulir {
-  margin-left: auto;
-  border: none;
-  cursor: pointer;
-  padding: 0.45rem;
-  border-radius: 999px;
-  background: var(--md-surface-container-high);
+.rail-indikator {
   display: grid;
   place-items: center;
-  color: var(--md-on-surface);
-  flex: none;
-}
-.cangkang-tutup .tombol-gulir {
-  margin-left: 0;
-}
-.cangkang-tutup .merek {
-  flex-direction: column;
-  gap: 0.5rem;
+  width: 56px;
+  height: 32px;
+  border-radius: var(--md-shape-full);
+  transition: background-color var(--md-duration-short-3) var(--md-easing-standard);
 }
 
-.bawah-sisi {
+.rail-item:hover .rail-indikator {
+  background: color-mix(in srgb, var(--md-on-surface) var(--md-state-hover), transparent);
+}
+
+.rail-item[aria-current="page"] {
+  color: var(--md-on-surface);
+}
+
+.rail-item[aria-current="page"] .rail-indikator {
+  background: var(--md-secondary-container);
+  color: var(--md-on-secondary-container);
+}
+
+.rail-item[aria-current="page"] .rail-indikator .msr,
+.navbar-item[aria-current="page"] .navbar-indikator .msr,
+.md-nav-item--aktif .md-nav-item__ikon .msr {
+  animation: md-nav-pop var(--md-duration-medium-1) var(--md-easing-emphasized-decelerate);
+}
+
+@keyframes md-nav-pop {
+  0% { transform: scale(0.7); }
+  55% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+.rail-foot {
   margin-top: auto;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 4px;
 }
-.tombol-tema {
+
+/* ---------- Navigation bar ---------- */
+.md-nav-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  display: flex;
+  justify-content: space-around;
+  gap: 4px;
+  height: 80px;
+  padding: 0 8px env(safe-area-inset-bottom);
+  background: var(--md-surface-container);
+}
+
+.navbar-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 0 0;
   border: none;
+  background: transparent;
+  color: var(--md-on-surface-variant);
   cursor: pointer;
-  padding: 0.55rem;
-  border-radius: 999px;
-  background: var(--md-surface-container-high);
-  font-size: 1.2rem;
+  font-family: inherit;
 }
 
-/* Konten */
-.konten {
-  padding: 1.75rem;
-  min-width: 0;
+.navbar-indikator {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 32px;
+  border-radius: var(--md-shape-full);
+  transition: background-color var(--md-duration-short-3) var(--md-easing-standard);
 }
 
-.kepala-seluler,
-.merek-mini,
-.aksi-mini,
-.bilah-bawah {
-  display: none;
+.navbar-item:hover .navbar-indikator {
+  background: color-mix(in srgb, var(--md-on-surface) var(--md-state-hover), transparent);
 }
 
-/* Mobile */
-@media (max-width: 900px) {
-  .cangkang {
-    grid-template-columns: 1fr;
+.navbar-item[aria-current="page"] {
+  color: var(--md-on-surface);
+}
+
+.navbar-item[aria-current="page"] .navbar-indikator {
+  background: var(--md-secondary-container);
+  color: var(--md-on-secondary-container);
+}
+
+/* ---------- Top app bar (compact) ---------- */
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--md-primary);
+}
+
+.topbar-brand b {
+  color: var(--md-on-surface);
+}
+
+.topbar-aksi {
+  display: flex;
+  gap: 4px;
+}
+
+/* ---------- Breakpoint M3 ---------- */
+@media (min-width: 600px) {
+  .md-shell {
+    grid-template-columns: 80px minmax(0, 1fr);
   }
-  .bilah-sisi {
+  .md-nav-rail {
+    display: flex;
+  }
+  .md-nav-bar,
+  .md-top-app-bar {
     display: none;
   }
-  .kepala-seluler {
+  .md-content {
+    padding: 24px 24px 40px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .md-shell {
+    grid-template-columns: 280px minmax(0, 1fr);
+  }
+  .md-nav-rail {
+    display: none;
+  }
+  .md-nav-drawer {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: -0.5rem 0 1rem;
   }
-  .merek-mini {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    font-size: 1.1rem;
-  }
-  .aksi-mini {
-    display: inline-flex;
-    gap: 0.4rem;
-  }
-  .mini {
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 999px;
-    background: var(--md-surface-container-high);
-    font-size: 1rem;
-    display: grid;
-    place-items: center;
-  }
-  .merek-mini-ikon {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-  }
-  .bilah-bawah {
-    position: fixed;
-    inset: auto 1rem 1rem 1rem;
-    display: flex;
-    justify-content: space-around;
-    background: var(--md-surface-container);
-    border-radius: 999px;
-    box-shadow: var(--shadow-kartu);
-    padding: 0.5rem;
-    z-index: 10;
-  }
-  .butir-bawah {
-    border: none;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.1rem;
-    padding: 0.35rem 1.1rem;
-    border-radius: 999px;
-    background: transparent;
-    color: var(--md-on-surface-variant);
-    font-size: 1.1rem;
-  }
-  .butir-bawah small {
-    font-size: 0.7rem;
-    font-weight: 600;
-  }
-  .butir-bawah.aktif {
-    background: var(--md-primary-container);
-    color: var(--md-on-primary-container);
-  }
-  .konten {
-    padding: 1rem 1rem 5rem;
+  .md-content {
+    padding: 32px 32px 48px;
   }
 }
 </style>

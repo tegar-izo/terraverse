@@ -9,14 +9,12 @@ import {
 import { isoHariIni } from "../lib/calendar.js";
 import MiniKalender from "../components/MiniKalender.vue";
 
-const STATUSSOS = ["todo", "dikerjakan", "selesai"];
-
 const jumlahTugasAktif = computed(
   () => tugas.value.filter((t) => t.status !== "selesai").length
 );
 
 const jumlahSelesaiBulanIni = computed(() => {
-  const kini = isoHariIni().slice(0, 7); // "YYYY-MM"
+  const kini = isoHariIni().slice(0, 7);
   return tugas.value.filter(
     (t) => t.status === "selesai" && (t.tanggalTarget || "").slice(0, 7) === kini
   ).length;
@@ -42,79 +40,95 @@ function ikonTool(t) {
 </script>
 
 <template>
-  <section>
-    <div class="beranda-tata">
-      <div class="kolom-utama">
-        <h2 class="judul-selamat">Dashboard</h2>
+  <section class="beranda">
+    <header class="beranda__kepala">
+      <h2 class="md-headline-medium">Dashboard</h2>
+      <p class="md-body-medium beranda__sub">Ringkasan ruang kerjamu hari ini.</p>
+    </header>
 
-        <!-- ===== Strip statistik ===== -->
-        <div class="strip-stat">
-      <div class="kartu stat">
-        <span class="angka">{{ tools.length }}</span>
-        <span class="label">Tools</span>
-      </div>
-      <div class="kartu stat" @click="pindahHalaman('tugas')" role="button">
-        <span class="angka">{{ jumlahTugasAktif }}</span>
-        <span class="label">Tugas aktif</span>
-      </div>
-      <div class="kartu stat">
-        <span class="angka">{{ jumlahSelesaiBulanIni }}</span>
-        <span class="label">Selesai bulan ini</span>
-      </div>
-      <div class="kartu stat stat--deadline">
-        <span class="label label--tebalkan">Deadline terdekat</span>
-        <button
-          v-for="d of deadlineTerdekat"
-          :key="d.id"
-          class="butir-deadline"
-          @click="bukaDiKalender(d.tanggalTarget)"
-        >
-          <span class="msr">schedule</span><span class="tanggal">{{ d.tanggalTarget }}</span> · {{ d.judul }}
-        </button>
-        <span v-if="deadlineTerdekat.length === 0" class="kosong">
-          Tidak ada
-        </span>
-      </div>
-    </div>
+    <div class="beranda__tata">
+      <div class="beranda__utama">
+        <!-- ===== Statistik ===== -->
+        <div class="stat-grid">
+          <div class="md-card md-card--filled stat">
+            <span class="md-display-small stat__angka">{{ tools.length }}</span>
+            <span class="md-label-medium stat__label">Tools</span>
+          </div>
 
-    <!-- ===== Grid tools ===== -->
-    <h2 class="judul-reguler">Tools</h2>
-    <div class="grid-tool">
-      <a
-        v-for="t of tools"
-        :key="t.nama"
-        class="kartu kartu-tool"
-        :href="t.url"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <span class="kepala-tool">
-          <span class="wadah-ikon">
-            <span class="pengganti-ikon">{{ ikonTool(t) }}</span>
-            <img
-              class="ikon-tool"
-              :src="t.ikonUrl"
-              :alt="t.nama"
-              loading="lazy"
-              @error="($event) => ($event.target.style.display = 'none')"
-            />
-          </span>
-          <span class="blok-nama">
-            <span class="nama">{{ t.nama }}</span>
-            <span class="host">GitHub Pages</span>
-          </span>
-          <span class="msr buka">arrow_outward</span>
-        </span>
-        <span class="deskripsi">{{ t.deskripsi }}</span>
-      </a>
-    </div>
-    <p v-if="tools.length === 0" class="kosong">
-      Belum ada tools. Tambahkan lewat <code>src/data/tools.json</code>.
-    </p>
+          <button
+            class="md-card md-card--filled stat stat--aksi"
+            data-uji="stat-tugas"
+            @click="pindahHalaman('tugas')"
+          >
+            <span class="md-display-small stat__angka">{{ jumlahTugasAktif }}</span>
+            <span class="md-label-medium stat__label">Tugas aktif</span>
+          </button>
+
+          <div class="md-card md-card--filled stat">
+            <span class="md-display-small stat__angka">{{ jumlahSelesaiBulanIni }}</span>
+            <span class="md-label-medium stat__label">Selesai bulan ini</span>
+          </div>
+
+          <div class="md-card md-card--filled stat stat--deadline">
+            <span class="md-label-medium stat__label">Deadline terdekat</span>
+            <button
+              v-for="d of deadlineTerdekat"
+              :key="d.id"
+              class="deadline-item"
+              data-uji="deadline-item"
+              @click="bukaDiKalender(d.tanggalTarget)"
+            >
+              <span class="msr">schedule</span>
+              <span class="deadline-item__tanggal">{{ d.tanggalTarget }}</span>
+              <span class="deadline-item__judul">{{ d.judul }}</span>
+            </button>
+            <span v-if="deadlineTerdekat.length === 0" class="md-body-small kosong">
+              Tidak ada deadline.
+            </span>
+          </div>
+        </div>
+
+        <!-- ===== Tools ===== -->
+        <section class="bagian">
+          <h3 class="md-title-large bagian__judul">Tools</h3>
+          <div class="grid-tool">
+            <a
+              v-for="t of tools"
+              :key="t.nama"
+              class="md-card md-card--elevated tool-card"
+              data-uji="kartu-tool"
+              :href="t.url"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span class="tool-card__kepala">
+                <span class="tool-card__ikon">
+                  <span class="tool-card__inisial">{{ ikonTool(t) }}</span>
+                  <img
+                    class="tool-card__gambar"
+                    :src="t.ikonUrl"
+                    :alt="t.nama"
+                    loading="lazy"
+                    @error="($event) => ($event.target.style.display = 'none')"
+                  />
+                </span>
+                <span class="tool-card__nama">
+                  <span class="md-title-small">{{ t.nama }}</span>
+                  <span class="md-chip md-chip--kecil md-chip--tonal">GitHub Pages</span>
+                </span>
+                <span class="msr tool-card__buka">arrow_outward</span>
+              </span>
+              <span class="md-body-small tool-card__deskripsi">{{ t.deskripsi }}</span>
+            </a>
+          </div>
+          <p v-if="tools.length === 0" class="md-body-medium kosong">
+            Belum ada tools. Tambahkan lewat <code>src/data/tools.json</code>.
+          </p>
+        </section>
       </div>
 
-      <!-- ===== Kalender mini di samping ===== -->
-      <aside class="kolom-samping">
+      <!-- ===== Kalender mini ===== -->
+      <aside class="beranda__samping">
         <MiniKalender />
       </aside>
     </div>
@@ -122,180 +136,234 @@ function ikonTool(t) {
 </template>
 
 <style scoped>
-.beranda-tata {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 290px;
-  gap: 1.25rem;
-  align-items: start;
-}
-.kolom-samping {
-  position: sticky;
-  top: 1.25rem;
-}
-
-.judul-selamat {
-  font-size: 1.6rem;
-  margin: 0 0 1.25rem;
-}
-.judul-reguler {
-  font-size: 1.2rem;
-  margin: 1.75rem 0 1rem;
-}
-
-.strip-stat {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.9rem;
-}
-.stat {
-  padding: 1.1rem 1.2rem;
+.beranda {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  gap: 24px;
 }
-.stat [role="button"] {
-  cursor: pointer;
+
+.beranda__kepala {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
-.angka {
-  font-size: 2rem;
-  font-weight: 800;
-  color: var(--md-primary);
-}
-.label {
-  font-size: 0.85rem;
+
+.beranda__sub {
   color: var(--md-on-surface-variant);
 }
-.label--tebalkan {
-  font-weight: 700;
+
+.beranda__tata {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
 }
-.stat--deadline {
-  gap: 0.45rem;
+
+.beranda__utama {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  min-width: 0;
 }
-.butir-deadline {
+
+.beranda__samping {
+  min-width: 0;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+  min-height: 96px;
   border: none;
-  background: transparent;
-  cursor: pointer;
   text-align: left;
-  padding: 0;
-  font-size: 0.85rem;
+  font-family: inherit;
+}
+
+.stat--aksi {
+  cursor: pointer;
+  transition: background-color var(--md-duration-short-3) var(--md-easing-standard);
+}
+
+.stat--aksi:hover {
+  background: color-mix(
+    in srgb,
+    var(--md-on-surface) var(--md-state-hover),
+    var(--md-surface-container-highest)
+  );
+}
+
+.stat__angka {
   color: var(--md-primary);
   font-weight: 600;
+}
+
+.stat__label {
+  color: var(--md-on-surface-variant);
+}
+
+.stat--deadline {
+  gap: 8px;
+  justify-content: flex-start;
+}
+
+.deadline-item {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 6px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--md-primary);
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: left;
+  cursor: pointer;
 }
-.butir-deadline .msr {
+
+.deadline-item:hover {
+  text-decoration: underline;
+}
+
+.deadline-item .msr {
   font-size: 16px;
 }
-.butir-deadline .tanggal {
-  font-weight: 800;
+
+.deadline-item__tanggal {
+  font-weight: 700;
+  flex: none;
+}
+
+.deadline-item__judul {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bagian {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bagian__judul {
+  color: var(--md-on-surface);
 }
 
 .grid-tool {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
 }
-.kartu-tool {
-  padding: 1.2rem;
-  text-decoration: none;
-  color: inherit;
+
+.tool-card {
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
-  transition: transform 0.15s ease;
+  gap: 10px;
+  padding: 16px;
+  text-decoration: none;
+  color: inherit;
 }
-.kartu-tool:hover {
+
+.tool-card:hover {
+  box-shadow: var(--md-elevation-2);
   transform: translateY(-2px);
-  background: var(--md-surface-container-high);
+  background: color-mix(
+    in srgb,
+    var(--md-primary) 4%,
+    var(--md-surface-container-low)
+  );
 }
-.kepala-tool {
+
+.tool-card__kepala {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 12px;
 }
-.wadah-ikon {
+
+.tool-card__ikon {
   position: relative;
   flex: none;
   width: 48px;
   height: 48px;
 }
-.wadah-ikon .pengganti-ikon {
+
+.tool-card__inisial {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
-  border-radius: 14px;
-  background: var(--md-primary-container);
-  color: var(--md-on-primary-container);
-  font-weight: 800;
-  font-size: 0.9rem;
+  border-radius: var(--md-shape-md);
+  background: var(--md-secondary-container);
+  color: var(--md-on-secondary-container);
+  font-size: 14px;
+  font-weight: 700;
   letter-spacing: 0.5px;
 }
-.wadah-ikon .ikon-tool {
+
+.tool-card__gambar {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: contain;
 }
-.blok-nama {
+
+.tool-card__nama {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.35rem;
+  gap: 4px;
   min-width: 0;
   flex: 1;
 }
-.nama {
-  font-weight: 700;
-  font-size: 1rem;
-  overflow-wrap: anywhere;
-}
-.buka {
-  margin-left: auto;
-  flex: none;
+
+.tool-card__buka {
   color: var(--md-on-surface-variant);
+  align-self: flex-start;
 }
-.deskripsi {
-  font-size: 0.8rem;
+
+.tool-card__deskripsi {
   color: var(--md-on-surface-variant);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.host {
-  font-size: 0.62rem;
-  font-weight: 700;
-  color: var(--md-on-primary-container);
-  background: var(--md-primary-container);
-  border-radius: 999px;
-  padding: 0.2rem 0.6rem;
-  white-space: nowrap;
-}
 
 .kosong {
   color: var(--md-on-surface-variant);
-  font-style: italic;
-}
-code {
-  background: var(--md-surface-container-high);
-  padding: 0.1rem 0.4rem;
-  border-radius: 8px;
 }
 
-@media (max-width: 900px) {
-  .strip-stat {
-    grid-template-columns: repeat(2, 1fr);
+code {
+  padding: 1px 6px;
+  border-radius: var(--md-shape-xs);
+  background: var(--md-surface-container-high);
+  font-family: inherit;
+}
+
+@media (min-width: 900px) {
+  .stat-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
-@media (max-width: 1100px) {
-  .beranda-tata {
-    grid-template-columns: 1fr;
+
+@media (min-width: 1100px) {
+  .beranda__tata {
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 28px;
   }
-  .kolom-samping {
-    position: static;
+  .beranda__samping {
+    position: sticky;
+    top: 24px;
   }
 }
 </style>

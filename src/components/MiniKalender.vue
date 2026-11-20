@@ -42,123 +42,131 @@ function buka(sel) {
 </script>
 
 <template>
-  <div class="kartu mini-kalender">
-    <div class="kecil-kepala">
-      <button class="mini-nav" title="Bulan sebelumnya" @click="geserBulan(-1)">
+  <div class="md-card md-card--filled mini-kalender" data-uji="mini-kalender">
+    <div class="mini-kalender__kepala">
+      <button class="md-icon-button mini-kalender__nav" title="Bulan sebelumnya" data-uji="mini-sebelum" @click="geserBulan(-1)">
         <span class="msr">chevron_left</span>
       </button>
-      <b class="judul-kecil">{{ labelBulan }}</b>
-      <button class="mini-nav" title="Bulan berikutnya" @click="geserBulan(1)">
+      <b class="md-title-small" data-uji="mini-label">{{ labelBulan }}</b>
+      <button class="md-icon-button mini-kalender__nav" title="Bulan berikutnya" data-uji="mini-sesudah" @click="geserBulan(1)">
         <span class="msr">chevron_right</span>
       </button>
     </div>
 
-    <div class="kecil-hari">
-      <span v-for="h of NAMA_HARI" :key="h">{{ h }}</span>
+    <div class="mini-kalender__hari">
+      <span v-for="h of NAMA_HARI" :key="h" class="md-label-small">{{ h }}</span>
     </div>
 
-    <div class="kecil-grid">
+    <Transition name="md-fade" mode="out-in">
+    <div class="mini-kalender__grid" :key="labelBulan">
       <button
         v-for="sel of grid"
         :key="sel.iso"
-        class="kecil-sel"
-        :class="{ luar: !sel.dalamBulan, beranda: sel.iso === hariIni, tetap: sel.satuTugas || sel.satuTujuan }"
+        class="mini-kalender__sel"
+        data-uji="mini-sel"
+        :class="{ 'mini-kalender__sel--luar': !sel.dalamBulan, 'mini-kalender__sel--kini': sel.iso === hariIni }"
+        :aria-label="sel.iso"
         :title="`${sel.iso}${sel.satuTugas ? ' · tugas' : ''}${sel.satuTujuan ? ' · tujuan' : ''}`"
         @click="buka(sel)"
       >
-        <span class="kecil-angka">{{ sel.hari }}</span>
-        <span class="titik-tanda">
-          <i v-if="sel.satuTugas" class="titik titik-tugas"></i>
-          <i v-if="sel.satuTujuan" class="titik titik-tujuan"></i>
+        <span class="md-label-small mini-kalender__angka">{{ sel.hari }}</span>
+        <span class="mini-kalender__titik">
+          <i v-if="sel.satuTugas" class="mini-kalender__tugas"></i>
+          <i v-if="sel.satuTujuan" class="mini-kalender__tujuan"></i>
         </span>
       </button>
     </div>
+    </Transition>
   </div>
 </template>
 
 <style scoped>
 .mini-kalender {
-  padding: 1rem;
+  padding: 16px;
 }
-.kecil-kepala {
+
+.mini-kalender__kepala {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.6rem;
+  gap: 4px;
+  margin-bottom: 12px;
 }
-.judul-kecil {
-  font-size: 0.9rem;
+
+.mini-kalender__nav {
+  width: 32px;
+  height: 32px;
 }
-.mini-nav {
-  border: none;
-  cursor: pointer;
-  background: var(--md-surface-container-high);
-  border-radius: 999px;
-  padding: 0.25rem;
-  display: grid;
-  place-items: center;
-  color: var(--md-on-surface);
+
+.mini-kalender__nav .msr {
+  font-size: 20px;
 }
-.kecil-hari {
+
+.mini-kalender__hari {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   text-align: center;
-  font-size: 0.62rem;
-  font-weight: 700;
   color: var(--md-on-surface-variant);
-  margin-bottom: 0.25rem;
+  margin-bottom: 4px;
 }
-.kecil-grid {
+
+.mini-kalender__grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 2px;
 }
-.kecil-sel {
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-  background: transparent;
-  color: var(--md-on-surface);
-  border-radius: 10px;
-  padding: 0.3rem 0 0.22rem;
+
+.mini-kalender__sel {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 2px;
   min-height: 34px;
+  padding: 2px 0;
+  border: none;
+  border-radius: var(--md-shape-full);
+  background: transparent;
+  color: var(--md-on-surface);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color var(--md-duration-short-2) var(--md-easing-standard);
 }
-.kecil-sel:hover {
-  background: var(--md-surface-container-high);
+
+.mini-kalender__sel:hover {
+  background: color-mix(in srgb, var(--md-on-surface) var(--md-state-hover), transparent);
 }
-.kecil-sel.luar {
-  opacity: 0.35;
+
+.mini-kalender__sel--luar {
+  opacity: 0.38;
 }
-.kecil-sel.beranda {
-  outline: 1.5px solid var(--md-primary);
+
+.mini-kalender__sel--kini {
+  box-shadow: inset 0 0 0 1px var(--md-primary);
 }
-.kecil-sel.tetap {
-  background: var(--md-surface-container-high);
-}
-.kecil-angka {
-  font-size: 0.7rem;
+
+.mini-kalender__angka {
   font-weight: 600;
 }
-.titik-tanda {
+
+.mini-kalender__titik {
   display: flex;
-  gap: 2px;
+  gap: 3px;
   min-height: 4px;
 }
-.titik {
-  width: 5px;
-  height: 5px;
-  border-radius: 999px;
-  display: inline-block;
-}
-.titik-tugas {
+
+.mini-kalender__tugas {
+  width: 4px;
+  height: 4px;
+  border-radius: var(--md-shape-full);
   background: var(--md-primary);
 }
-.titik-tujuan {
+
+.mini-kalender__tujuan {
+  width: 4px;
+  height: 4px;
+  border-radius: var(--md-shape-full);
   background: transparent;
-  box-shadow: inset 0 0 0 1.2px var(--md-primary);
+  box-shadow: inset 0 0 0 1px var(--md-tertiary);
 }
 </style>

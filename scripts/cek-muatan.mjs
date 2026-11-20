@@ -80,19 +80,17 @@ if (app.children.length === 0) {
 console.log("✅ Aplikasi termuat");
 
 // Navigasi: pastikan view Tugas & Kalender juga termuat tanpa error
-for (const teks of ["Tugas", "Kalender"]) {
-  const butir = [...document.querySelectorAll(".butir-nav")].find((b) =>
-    b.textContent.includes(teks)
-  );
+for (const [id, nama] of [["tugas", "Tugas"], ["kalender", "Kalender"]]) {
+  const butir = document.querySelector(`[data-uji="nav-${id}"]`);
   if (!butir) {
-    console.error(`TIDAK KETEMU tombol ${teks}`);
+    console.error(`TIDAK KETEMU tombol ${nama}`);
     process.exit(3);
   }
   butir.click();
   await new Promise((r) => setTimeout(r, 100));
-  const judul = document.querySelector(".konten h2");
+  const judul = document.querySelector(".md-content h2");
   console.log(
-    `--- View ${teks}: judul="${judul?.textContent?.trim() ?? "?"}" HTML=${app.innerHTML.length}`
+    `--- View ${nama}: judul="${judul?.textContent?.trim() ?? "?"}" HTML=${app.innerHTML.length}`
   );
 }
 console.log("✅ Semua view termuat tanpa error");

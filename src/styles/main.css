@@ -1,13 +1,9 @@
-/* ===== Token warna Material 3 — utama hijau pastel ===== */
-:root {
-  --radius-l: 32px;
-  --radius-m: 24px;
-  --radius-s: 16px;
-  --font-body: "Paper Mono", ui-monospace, "Cascadia Mono", system-ui, monospace;
-  --font-ikon: "Material Symbols Rounded";
-}
+/* ============================================================
+   Terraverse — token & komponen Material 3
+   Palet hijau pastel sebagai seed, role lengkap terang/gelap.
+   ============================================================ */
 
-/* ===== Font Paper Mono (self-hosted) ===== */
+/* ---------- Font Paper Mono (self-hosted) ---------- */
 @font-face {
   font-family: "Paper Mono";
   src: url("/fonts/PaperMono-Regular.woff2") format("woff2");
@@ -37,7 +33,7 @@
   font-display: swap;
 }
 
-/* ===== Ikon Material Symbols (self-hosted, variabel FILL) ===== */
+/* ---------- Ikon Material Symbols Rounded ---------- */
 @font-face {
   font-family: "Material Symbols Rounded";
   src: url("/fonts/MaterialSymbolsRounded.woff2") format("woff2");
@@ -46,8 +42,254 @@
   font-display: block;
 }
 
+:root {
+  --md-font-brand: "Paper Mono", ui-monospace, "Cascadia Mono", system-ui, monospace;
+  --md-font-ikon: "Material Symbols Rounded";
+
+  /* ---------- Shape scale M3 ---------- */
+  --md-shape-none: 0;
+  --md-shape-xs: 10px;
+  --md-shape-sm: 14px;
+  --md-shape-md: 20px;
+  --md-shape-lg: 24px;
+  --md-shape-xl: 32px;
+  --md-shape-full: 999px;
+
+  /* ---------- Motion M3 ---------- */
+  --md-duration-short-1: 50ms;
+  --md-duration-short-2: 100ms;
+  --md-duration-short-3: 150ms;
+  --md-duration-medium-1: 250ms;
+  --md-duration-medium-2: 300ms;
+  --md-duration-long-1: 450ms;
+  --md-duration-long-2: 500ms;
+  --md-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --md-easing-standard-decelerate: cubic-bezier(0, 0, 0, 1);
+  --md-easing-standard-accelerate: cubic-bezier(0.3, 0, 1, 1);
+  --md-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --md-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --md-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+
+  /* ---------- Interaction state layers M3 ---------- */
+  --md-state-hover: 0.08;
+  --md-state-focus: 0.1;
+  --md-state-pressed: 0.1;
+  --md-state-dragged: 0.16;
+
+  /* ---------- Elevation M3 ---------- */
+  --md-elevation-1: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
+  --md-elevation-2: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 6px 2px rgba(0, 0, 0, 0.15);
+  --md-elevation-3: 0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 8px 3px rgba(0, 0, 0, 0.15);
+  --md-elevation-4: 0 2px 3px rgba(0, 0, 0, 0.3), 0 6px 10px 4px rgba(0, 0, 0, 0.15);
+  --md-elevation-5: 0 4px 4px rgba(0, 0, 0, 0.3), 0 8px 12px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* ---------- Light scheme (seed: hijau pastel) ---------- */
+:root,
+[data-tema="terang"] {
+  color-scheme: light;
+
+  --md-primary: #3e7d52;
+  --md-on-primary: #ffffff;
+  --md-primary-container: #bfefcb;
+  --md-on-primary-container: #00210e;
+  --md-primary-fixed: #bfefcb;
+  --md-primary-fixed-dim: #8fd3a4;
+  --md-on-primary-fixed: #00210e;
+  --md-on-primary-fixed-variant: #1e5232;
+
+  --md-secondary: #506353;
+  --md-on-secondary: #ffffff;
+  --md-secondary-container: #d3e8d3;
+  --md-on-secondary-container: #0e1f13;
+  --md-secondary-fixed: #d3e8d3;
+  --md-secondary-fixed-dim: #b7ccb8;
+  --md-on-secondary-fixed: #0e1f13;
+  --md-on-secondary-fixed-variant: #394c3c;
+
+  --md-tertiary: #3b6470;
+  --md-on-tertiary: #ffffff;
+  --md-tertiary-container: #bfe9f5;
+  --md-on-tertiary-container: #001f27;
+  --md-tertiary-fixed: #bfe9f5;
+  --md-tertiary-fixed-dim: #a3cdd9;
+  --md-on-tertiary-fixed: #001f27;
+  --md-on-tertiary-fixed-variant: #234c56;
+
+  --md-error: #ba1a1a;
+  --md-on-error: #ffffff;
+  --md-error-container: #ffdad6;
+  --md-on-error-container: #410002;
+
+  --md-surface: #f7fbf3;
+  --md-surface-dim: #d8dbd4;
+  --md-surface-bright: #f7fbf3;
+  --md-surface-container-lowest: #ffffff;
+  --md-surface-container-low: #f1f5ee;
+  --md-surface-container: #ecefe8;
+  --md-surface-container-high: #e6e9e2;
+  --md-surface-container-highest: #e0e4dd;
+  --md-on-surface: #191d18;
+  --md-on-surface-variant: #414941;
+  --md-outline: #717970;
+  --md-outline-variant: #c1c9be;
+  --md-inverse-surface: #2e322c;
+  --md-inverse-on-surface: #eff1ea;
+  --md-inverse-primary: #8fd3a4;
+  --md-scrim: #000000;
+  --md-shadow: #000000;
+}
+
+/* ---------- Dark scheme ---------- */
+[data-tema="gelap"] {
+  color-scheme: dark;
+
+  --md-primary: #8fd3a4;
+  --md-on-primary: #00391b;
+  --md-primary-container: #235232;
+  --md-on-primary-container: #bfefcb;
+  --md-primary-fixed: #bfefcb;
+  --md-primary-fixed-dim: #8fd3a4;
+  --md-on-primary-fixed: #00210e;
+  --md-on-primary-fixed-variant: #1e5232;
+
+  --md-secondary: #b7ccb8;
+  --md-on-secondary: #233427;
+  --md-secondary-container: #394c3c;
+  --md-on-secondary-container: #d3e8d3;
+  --md-secondary-fixed: #d3e8d3;
+  --md-secondary-fixed-dim: #b7ccb8;
+  --md-on-secondary-fixed: #0e1f13;
+  --md-on-secondary-fixed-variant: #394c3c;
+
+  --md-tertiary: #a3cdd9;
+  --md-on-tertiary: #05363f;
+  --md-tertiary-container: #234c56;
+  --md-on-tertiary-container: #bfe9f5;
+  --md-tertiary-fixed: #bfe9f5;
+  --md-tertiary-fixed-dim: #a3cdd9;
+  --md-on-tertiary-fixed: #001f27;
+  --md-on-tertiary-fixed-variant: #234c56;
+
+  --md-error: #ffb4ab;
+  --md-on-error: #690005;
+  --md-error-container: #93000a;
+  --md-on-error-container: #ffdad6;
+
+  --md-surface: #101410;
+  --md-surface-dim: #101410;
+  --md-surface-bright: #363a34;
+  --md-surface-container-lowest: #0b0f0b;
+  --md-surface-container-low: #181d18;
+  --md-surface-container: #1c211c;
+  --md-surface-container-high: #262b25;
+  --md-surface-container-highest: #313630;
+  --md-on-surface: #e0e4dd;
+  --md-on-surface-variant: #c1c9be;
+  --md-outline: #8b9389;
+  --md-outline-variant: #414941;
+  --md-inverse-surface: #e0e4dd;
+  --md-inverse-on-surface: #2e322c;
+  --md-inverse-primary: #3e7d52;
+  --md-scrim: #000000;
+  --md-shadow: #000000;
+}
+
+/* ============================================================
+   Tipografi — typescale M3 dengan Paper Mono
+   ============================================================ */
+.md-display-large,
+.md-display-medium,
+.md-display-small,
+.md-headline-large,
+.md-headline-medium,
+.md-headline-small,
+.md-title-large,
+.md-title-medium,
+.md-title-small,
+.md-body-large,
+.md-body-medium,
+.md-body-small,
+.md-label-large,
+.md-label-medium,
+.md-label-small {
+  font-family: var(--md-font-brand);
+  margin: 0;
+}
+
+.md-display-large { font-size: 57px; line-height: 64px; letter-spacing: -0.25px; font-weight: 400; }
+.md-display-medium { font-size: 45px; line-height: 52px; letter-spacing: 0; font-weight: 400; }
+.md-display-small { font-size: 36px; line-height: 44px; letter-spacing: 0; font-weight: 400; }
+
+.md-headline-large { font-size: 32px; line-height: 40px; letter-spacing: 0; font-weight: 600; }
+.md-headline-medium { font-size: 28px; line-height: 36px; letter-spacing: 0; font-weight: 600; }
+.md-headline-small { font-size: 24px; line-height: 32px; letter-spacing: 0; font-weight: 600; }
+
+.md-title-large { font-size: 22px; line-height: 28px; letter-spacing: 0; font-weight: 600; }
+.md-title-medium { font-size: 16px; line-height: 24px; letter-spacing: 0.15px; font-weight: 600; }
+.md-title-small { font-size: 14px; line-height: 20px; letter-spacing: 0.1px; font-weight: 600; }
+
+.md-body-large { font-size: 16px; line-height: 24px; letter-spacing: 0.5px; font-weight: 400; }
+.md-body-medium { font-size: 14px; line-height: 20px; letter-spacing: 0.25px; font-weight: 400; }
+.md-body-small { font-size: 12px; line-height: 16px; letter-spacing: 0.4px; font-weight: 400; }
+
+.md-label-large { font-size: 14px; line-height: 20px; letter-spacing: 0.1px; font-weight: 600; }
+.md-label-medium { font-size: 12px; line-height: 16px; letter-spacing: 0.5px; font-weight: 600; }
+.md-label-small { font-size: 11px; line-height: 16px; letter-spacing: 0.5px; font-weight: 600; }
+
+/* ============================================================
+   Dasar
+   ============================================================ */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--md-font-brand);
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  background: var(--md-surface);
+  color: var(--md-on-surface);
+  transition:
+    background-color var(--md-duration-medium-1) var(--md-easing-standard),
+    color var(--md-duration-medium-1) var(--md-easing-standard);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+button:where(:not(:disabled)),
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:where(button, a, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid var(--md-primary);
+  outline-offset: 2px;
+}
+
+/* Ikon Material Symbols */
 .msr {
-  font-family: var(--font-ikon);
+  font-family: var(--md-font-ikon);
   font-weight: normal;
   font-style: normal;
   font-size: 20px;
@@ -63,139 +305,641 @@
   font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
   user-select: none;
   vertical-align: middle;
+  flex: none;
 }
 
 .msr--isi {
   font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
 }
 
-/* Ikon bawaan input tanggal: pasti terang di gelap, gelap di terang */
+/* Ikon bawaan input tanggal ikut tema */
 [data-tema="gelap"] input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(0.87) sepia(0.25) saturate(2.4) hue-rotate(78deg); /* tonjol hijau pastel */
+  filter: invert(0.87) sepia(0.25) saturate(2.4) hue-rotate(78deg);
 }
 
-/* Terang */
-:root,
-[data-tema="terang"] {
-  color-scheme: light; /* widget asli browser (pemilih tanggal, panah select) ikut tema terang */
-  --md-primary: #3e7d52;
-  --md-on-primary: #ffffff;
-  --md-primary-container: #c9eed3;
-  --md-on-primary-container: #14442a;
-  --md-surface: #fafcf8;
-  --md-surface-container: #eef5ee;
-  --md-surface-container-high: #e4efe5;
-  --md-on-surface: #1a201b;
-  --md-on-surface-variant: #444b44;
-  --md-outline-variant: #cbd5cb;
-  --md-error: #b3261e;
-  --shadow-kartu: 0 0 0 1px var(--md-outline-variant);
-}
-
-/* Gelap */
-[data-tema="gelap"] {
-  color-scheme: dark; /* ikon bawaan browser jadi terang, bukan hitam */
-  --md-primary: #8fd3a4;
-  --md-on-primary: #10381f;
-  --md-primary-container: #2b5239;
-  --md-on-primary-container: #c9eed3;
-  --md-surface: #131715;
-  --md-surface-container: #1d231f;
-  --md-surface-container-high: #28302a;
-  --md-on-surface: #e8ece7;
-  --md-on-surface-variant: #c2cabe;
-  --md-outline-variant: #46554c;
-  --md-error: #f2b8b5;
-  --shadow-kartu: none;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: var(--font-body);
-  background: var(--md-surface);
-  color: var(--md-on-surface);
-  transition: background 0.25s ease, color 0.25s ease;
-}
-
-button {
-  font-family: inherit;
-}
-
-/* Komponen dasar bersama */
-.kartu {
-  background: var(--md-surface-container);
-  border-radius: var(--radius-m);
-  box-shadow: var(--shadow-kartu);
-}
-
-.tombol {
+/* ============================================================
+   Tombol M3
+   ============================================================ */
+.md-filled-button,
+.md-tonal-button,
+.md-elevated-button,
+.md-outlined-button,
+.md-text-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 24px;
   border: none;
+  border-radius: var(--md-shape-full);
   cursor: pointer;
-  border-radius: 999px;
-  padding: 0.6rem 1.1rem;
-  font-size: 0.95rem;
+  font-family: var(--md-font-brand);
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
   font-weight: 600;
+  white-space: nowrap;
+  transition:
+    background-color var(--md-duration-short-3) var(--md-easing-standard),
+    box-shadow var(--md-duration-short-3) var(--md-easing-standard),
+    transform var(--md-duration-short-2) var(--md-easing-standard);
+}
+
+.md-filled-button .msr,
+.md-tonal-button .msr,
+.md-elevated-button .msr,
+.md-outlined-button .msr,
+.md-text-button .msr {
+  font-size: 18px;
+}
+
+.md-filled-button {
   background: var(--md-primary);
   color: var(--md-on-primary);
 }
+.md-filled-button:not(:disabled):hover {
+  background: color-mix(in srgb, var(--md-on-primary) var(--md-state-hover), var(--md-primary));
+}
+.md-filled-button:not(:disabled):active {
+  background: color-mix(in srgb, var(--md-on-primary) var(--md-state-pressed), var(--md-primary));
+}
 
-.tombol--stengah {
+.md-tonal-button {
+  background: var(--md-secondary-container);
+  color: var(--md-on-secondary-container);
+}
+.md-tonal-button:not(:disabled):hover {
+  background: color-mix(in srgb, var(--md-on-secondary-container) var(--md-state-hover), var(--md-secondary-container));
+}
+
+.md-elevated-button {
+  background: var(--md-surface-container-low);
+  color: var(--md-primary);
+  box-shadow: var(--md-elevation-1);
+}
+.md-elevated-button:not(:disabled):hover {
+  background: color-mix(in srgb, var(--md-primary) var(--md-state-hover), var(--md-surface-container-low));
+  box-shadow: var(--md-elevation-2);
+}
+
+.md-outlined-button {
   background: transparent;
   color: var(--md-primary);
-  box-shadow: inset 0 0 0 1.5px var(--md-primary);
+  border: 1px solid var(--md-outline);
+}
+.md-outlined-button:not(:disabled):hover {
+  background: color-mix(in srgb, var(--md-primary) var(--md-state-hover), transparent);
 }
 
-.tombol--efekteks {
+.md-text-button {
   background: transparent;
   color: var(--md-primary);
+  padding: 0 12px;
+}
+.md-text-button:not(:disabled):hover {
+  background: color-mix(in srgb, var(--md-primary) var(--md-state-hover), transparent);
 }
 
-.tombol--berbahaya {
-  background: transparent;
-  color: var(--md-error);
-  box-shadow: inset 0 0 0 1.5px var(--md-error);
+.md-filled-button:not(:disabled):active,
+.md-tonal-button:not(:disabled):active,
+.md-elevated-button:not(:disabled):active,
+.md-outlined-button:not(:disabled):active,
+.md-text-button:not(:disabled):active {
+  transform: scale(0.97);
 }
 
-input,
-select,
-textarea {
-  font-family: inherit;
-  font-size: 0.95rem;
-  color: var(--md-on-surface);
-  background: var(--md-surface-container-high);
+.md-filled-button:disabled,
+.md-tonal-button:disabled,
+.md-elevated-button:disabled,
+.md-outlined-button:disabled,
+.md-text-button:disabled {
+  opacity: 0.38;
+  cursor: default;
+}
+
+/* Tombol ikon */
+.md-icon-button {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
   border: none;
-  outline: none;
-  border-radius: var(--radius-s);
-  padding: 0.65rem 0.85rem;
-  width: 100%;
+  border-radius: var(--md-shape-full);
+  background: transparent;
+  color: var(--md-on-surface-variant);
+  cursor: pointer;
+  flex: none;
+  transition:
+    background-color var(--md-duration-short-3) var(--md-easing-standard),
+    transform var(--md-duration-short-2) var(--md-easing-standard);
+}
+.md-icon-button:not(:disabled):active {
+  transform: scale(0.92);
+}
+.md-icon-button .msr {
+  font-size: 22px;
+}
+.md-icon-button:not(:disabled):hover {
+  background: color-mix(in srgb, currentColor var(--md-state-hover), transparent);
+}
+.md-icon-button:not(:disabled):active {
+  background: color-mix(in srgb, currentColor var(--md-state-pressed), transparent);
+}
+.md-icon-button:disabled {
+  opacity: 0.38;
+  cursor: default;
+}
+.md-icon-button--filled {
+  background: var(--md-primary);
+  color: var(--md-on-primary);
+}
+.md-icon-button--filled:not(:disabled):hover {
+  background: color-mix(in srgb, var(--md-on-primary) var(--md-state-hover), var(--md-primary));
+}
+.md-icon-button--tonal {
+  background: var(--md-secondary-container);
+  color: var(--md-on-secondary-container);
 }
 
-input:focus,
-select:focus,
-textarea:focus {
-  box-shadow: 0 0 0 2px var(--md-primary);
-}
-
-label.bidang {
-  display: block;
-  font-size: 0.85rem;
+/* FAB */
+.md-fab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 56px;
+  min-width: 56px;
+  padding: 0 16px;
+  border: none;
+  border-radius: var(--md-shape-lg);
+  background: var(--md-primary-container);
+  color: var(--md-on-primary-container);
+  box-shadow: var(--md-elevation-3);
+  cursor: pointer;
+  font-family: var(--md-font-brand);
+  font-size: 14px;
+  line-height: 20px;
   font-weight: 600;
+  letter-spacing: 0.1px;
+  transition:
+    background-color var(--md-duration-short-3) var(--md-easing-standard),
+    box-shadow var(--md-duration-medium-1) var(--md-easing-standard),
+    transform var(--md-duration-short-2) var(--md-easing-standard);
+}
+.md-fab:not(:disabled):active {
+  transform: scale(0.96);
+}
+.md-fab .msr {
+  font-size: 24px;
+}
+.md-fab:not(:disabled):hover {
+  background: color-mix(in srgb, var(--md-on-primary-container) var(--md-state-hover), var(--md-primary-container));
+  box-shadow: var(--md-elevation-4);
+}
+.md-fab--extended {
+  padding: 0 20px;
+}
+
+/* ============================================================
+   Kartu M3
+   ============================================================ */
+.md-card {
+  border-radius: var(--md-shape-md);
+  transition:
+    background-color var(--md-duration-short-3) var(--md-easing-standard),
+    box-shadow var(--md-duration-medium-1) var(--md-easing-standard),
+    transform var(--md-duration-medium-1) var(--md-easing-emphasized-decelerate);
+}
+.md-card--elevated {
+  background: var(--md-surface-container-low);
+  box-shadow: var(--md-elevation-1);
+}
+.md-card--filled {
+  background: var(--md-surface-container-highest);
+}
+.md-card--outlined {
+  background: var(--md-surface);
+  border: 1px solid var(--md-outline-variant);
+}
+
+/* ============================================================
+   Chip M3
+   ============================================================ */
+.md-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--md-outline-variant);
+  border-radius: var(--md-shape-sm);
+  background: transparent;
+  color: var(--md-on-surface-variant);
+  font-family: var(--md-font-brand);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  max-width: 100%;
+}
+.md-chip .msr {
+  font-size: 16px;
+}
+.md-chip--tonal {
+  background: var(--md-secondary-container);
+  border-color: transparent;
+  color: var(--md-on-secondary-container);
+}
+.md-chip--primary {
+  background: var(--md-primary-container);
+  border-color: transparent;
+  color: var(--md-on-primary-container);
+}
+.md-chip--tertiary {
+  background: var(--md-tertiary-container);
+  border-color: transparent;
+  color: var(--md-on-tertiary-container);
+}
+.md-chip--error {
+  background: var(--md-error-container);
+  border-color: transparent;
+  color: var(--md-on-error-container);
+}
+.md-chip--kecil {
+  height: 24px;
+  padding: 0 8px;
+  border-radius: var(--md-shape-xs);
+  font-size: 11px;
+}
+.md-chip--kecil .msr {
+  font-size: 14px;
+}
+
+/* ============================================================
+   List item M3
+   ============================================================ */
+.md-list-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--md-shape-full);
+  background: transparent;
+  color: var(--md-on-surface);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: background-color var(--md-duration-short-3) var(--md-easing-standard);
+}
+.md-list-item:not(:disabled):hover {
+  background: color-mix(in srgb, var(--md-on-surface) var(--md-state-hover), transparent);
+}
+
+.md-divider {
+  height: 1px;
+  border: none;
+  background: var(--md-outline-variant);
+  margin: 0;
+}
+
+/* ============================================================
+   Text field M3 (outlined)
+   ============================================================ */
+.md-text-field {
+  position: relative;
+  display: block;
+  --md-field-bg: var(--md-surface-container-high);
+}
+
+.md-text-field > input,
+.md-text-field > select,
+.md-text-field > textarea {
+  display: block;
+  width: 100%;
+  min-height: 56px;
+  padding: 15px 16px;
+  border: 1px solid var(--md-outline);
+  border-radius: var(--md-shape-xs);
+  background: transparent;
+  color: var(--md-on-surface);
+  font-family: var(--md-font-brand);
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+  outline: none;
+  transition: border-color var(--md-duration-short-3) var(--md-easing-standard);
+}
+
+.md-text-field > select {
+  appearance: none;
+  padding-right: 48px;
+  cursor: pointer;
+}
+
+.md-text-field > textarea {
+  min-height: 104px;
+  padding-top: 24px;
+  resize: vertical;
+}
+
+.md-text-field > input::placeholder,
+.md-text-field > textarea::placeholder {
+  color: transparent;
+}
+
+.md-text-field > input:focus,
+.md-text-field > select:focus,
+.md-text-field > textarea:focus {
+  border-color: var(--md-primary);
+  box-shadow: inset 0 0 0 1px var(--md-primary);
+}
+
+.md-text-field__label {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  padding: 0 4px;
+  background: var(--md-field-bg);
+  color: var(--md-on-surface-variant);
+  font-family: var(--md-font-brand);
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+  font-weight: 400;
+  pointer-events: none;
+  transition:
+    top var(--md-duration-short-3) var(--md-easing-standard),
+    font-size var(--md-duration-short-3) var(--md-easing-standard),
+    color var(--md-duration-short-3) var(--md-easing-standard);
+}
+
+.md-text-field:focus-within > .md-text-field__label,
+.md-text-field--terisi > .md-text-field__label,
+.md-text-field--area > .md-text-field__label {
+  top: 0;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.4px;
   color: var(--md-on-surface-variant);
 }
 
-label.bidang input,
-label.bidang select,
-label.bidang textarea {
-  margin-top: 0.35rem;
-  font-weight: 400;
+.md-text-field:focus-within > .md-text-field__label {
+  color: var(--md-primary);
+}
+
+.md-text-field__trailing {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  color: var(--md-on-surface-variant);
+  pointer-events: none;
+}
+
+/* ============================================================
+   Checkbox M3
+   ============================================================ */
+.md-checkbox input[type="checkbox"] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  flex: none;
+  border: 2px solid var(--md-on-surface-variant);
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  display: inline-grid;
+  place-content: center;
+  transition:
+    background-color var(--md-duration-short-2) var(--md-easing-standard),
+    border-color var(--md-duration-short-2) var(--md-easing-standard),
+    transform var(--md-duration-short-2) var(--md-easing-emphasized);
+}
+.md-checkbox input[type="checkbox"]:active {
+  transform: scale(0.88);
+}
+.md-checkbox input[type="checkbox"]::after {
+  content: "";
+  width: 10px;
+  height: 5px;
+  border-left: 2px solid var(--md-on-primary);
+  border-bottom: 2px solid var(--md-on-primary);
+  transform: rotate(-45deg) translateY(-1px) scale(0);
+  opacity: 0;
+  transition:
+    transform var(--md-duration-short-3) var(--md-easing-emphasized-decelerate),
+    opacity var(--md-duration-short-2) var(--md-easing-standard);
+}
+.md-checkbox input[type="checkbox"]:checked {
+  background: var(--md-primary);
+  border-color: var(--md-primary);
+}
+.md-checkbox input[type="checkbox"]:checked::after {
+  transform: rotate(-45deg) translateY(-1px) scale(1);
+  opacity: 1;
+}
+
+/* ============================================================
+   Segmented button M3
+   ============================================================ */
+.md-segmented {
+  display: inline-flex;
+  align-items: stretch;
+  height: 40px;
+  border: 1px solid var(--md-outline);
+  border-radius: var(--md-shape-full);
+  overflow: hidden;
+}
+.md-segmented__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  border: none;
+  border-right: 1px solid var(--md-outline);
+  background: transparent;
   color: var(--md-on-surface);
+  cursor: pointer;
+  font-family: var(--md-font-brand);
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background-color var(--md-duration-short-3) var(--md-easing-standard);
+}
+.md-segmented__item:last-child {
+  border-right: none;
+}
+.md-segmented__item .msr {
+  font-size: 18px;
+}
+.md-segmented__item:not(.md-segmented__item--aktif):hover {
+  background: color-mix(in srgb, var(--md-on-surface) var(--md-state-hover), transparent);
+}
+.md-segmented__item--aktif {
+  background: var(--md-secondary-container);
+  color: var(--md-on-secondary-container);
+}
+
+/* ============================================================
+   Dialog M3
+   ============================================================ */
+.md-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: color-mix(in srgb, var(--md-scrim) 32%, transparent);
+}
+
+.md-dialog {
+  width: min(560px, 100%);
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+  padding: 24px;
+  border-radius: var(--md-shape-xl);
+  background: var(--md-surface-container-high);
+  color: var(--md-on-surface);
+  box-shadow: var(--md-elevation-3);
+}
+
+.md-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* ============================================================
+   Top app bar M3
+   ============================================================ */
+.md-top-app-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 64px;
+  padding: 0 8px 0 16px;
+  background: var(--md-surface);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+/* ============================================================
+   Navigasi M3
+   ============================================================ */
+.md-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 56px;
+  padding: 0 16px;
+  border: none;
+  border-radius: var(--md-shape-full);
+  background: transparent;
+  color: var(--md-on-surface-variant);
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--md-font-brand);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+  transition:
+    background-color var(--md-duration-short-3) var(--md-easing-standard),
+    color var(--md-duration-short-3) var(--md-easing-standard);
+}
+.md-nav-item:not(.md-nav-item--aktif):hover {
+  background: color-mix(in srgb, var(--md-on-surface) var(--md-state-hover), transparent);
+}
+.md-nav-item--aktif {
+  background: var(--md-secondary-container);
+  color: var(--md-on-secondary-container);
+}
+.md-nav-item__ikon {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  flex: none;
+}
+
+/* ============================================================
+   Motion transisi M3
+   ============================================================ */
+
+/* View: fade-through */
+.md-view-enter-active {
+  transition:
+    opacity var(--md-duration-medium-2) var(--md-easing-emphasized-decelerate),
+    transform var(--md-duration-medium-2) var(--md-easing-emphasized-decelerate);
+}
+.md-view-leave-active {
+  transition:
+    opacity var(--md-duration-short-3) var(--md-easing-emphasized-accelerate),
+    transform var(--md-duration-short-3) var(--md-easing-emphasized-accelerate);
+}
+.md-view-enter-from {
+  opacity: 0;
+  transform: translateY(12px) scale(0.96);
+}
+.md-view-leave-to {
+  opacity: 0;
+  transform: scale(0.98);
+}
+
+/* Daftar: tambah, hapus, dan geser */
+.md-list-enter-active,
+.md-list-move {
+  transition:
+    opacity var(--md-duration-medium-1) var(--md-easing-standard-decelerate),
+    transform var(--md-duration-medium-1) var(--md-easing-emphasized-decelerate);
+}
+.md-list-leave-active {
+  transition:
+    opacity var(--md-duration-short-3) var(--md-easing-standard-accelerate),
+    transform var(--md-duration-short-3) var(--md-easing-standard-accelerate);
+}
+.md-list-enter-from {
+  opacity: 0;
+  transform: translateY(-8px) scale(0.97);
+}
+.md-list-leave-to {
+  opacity: 0;
+  transform: scale(0.96);
+}
+
+/* Fade sederhana: pergantian grid bulan */
+.md-fade-enter-active {
+  transition: opacity var(--md-duration-medium-1) var(--md-easing-standard-decelerate);
+}
+.md-fade-leave-active {
+  transition: opacity var(--md-duration-short-2) var(--md-easing-standard-accelerate);
+}
+.md-fade-enter-from,
+.md-fade-leave-to {
+  opacity: 0;
+}
+
+/* ============================================================
+   Aksesibilitas gerak
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

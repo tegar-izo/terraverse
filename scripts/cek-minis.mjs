@@ -24,13 +24,13 @@ const asetJs = fs.readFileSync("dist/index.html", "utf8").match(/assets\/index-[
 await import(path.join("..", "dist", asetJs));
 await new Promise((r) => setTimeout(r, 300));
 
-const mk = document.querySelector(".mini-kalender");
+const mk = document.querySelector('[data-uji="mini-kalender"]');
 if (!mk) {
   console.error("❌ MiniKalender tidak tampil di Beranda");
   process.exit(1);
 }
-const judul = mk.querySelector(".judul-kecil")?.textContent.trim();
-const jumlahSel = mk.querySelectorAll(".kecil-sel").length;
+const judul = mk.querySelector('[data-uji="mini-label"]')?.textContent.trim();
+const jumlahSel = mk.querySelectorAll('[data-uji="mini-sel"]').length;
 console.log(`MiniKalender: "${judul}", ${jumlahSel} sel tanggal`);
 if (jumlahSel !== 42) { console.error("❌ jumlah sel tidak 42"); process.exit(2); }
 console.log("✅ MiniKalender tampil di Beranda");

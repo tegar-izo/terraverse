@@ -31,33 +31,26 @@ const asetJs = fs.readFileSync("dist/index.html", "utf8").match(/assets\/index-[
 await import(path.join("..", "dist", asetJs));
 
 await new Promise((r) => setTimeout(r, 300));
-const app = document.getElementById("app");
 const tunggu = (ms) => new Promise((r) => setTimeout(r, ms));
 
-function butirNav(teks) {
-  return [...document.querySelectorAll(".butir-nav")].find((b) => b.textContent.includes(teks));
+function butirNav(id) {
+  return document.querySelector(`[data-uji="nav-${id}"]`);
 }
 
-/* ---------- 1. Tambah tugas via modal ---------- */
-butirNav("Tugas").click();
+/* ---------- 1. Tambah tugas via dialog ---------- */
+butirNav("tugas").click();
 await tunggu(100);
-const tombolTambah = [...document.querySelectorAll(".tombol")].find((b) =>
-  b.textContent.includes("Tugas Baru")
-);
+const tombolTambah = document.querySelector('[data-uji="tugas-baru"]');
 if (!tombolTambah) { console.error("❌ tombol Tugas Baru tidak ada"); process.exit(1); }
 tombolTambah.click();
 await tunggu(50);
 
-const labelJdl = [...document.querySelectorAll("label.bidang")].find((l) =>
-  l.textContent.trim().startsWith("Judul")
-);
-if (!labelJdl) { console.error("❌ modal tidak terbuka / label Judul tak ditemukan"); process.exit(1); }
-const inputJudul = labelJdl.querySelector("input");
-const labelTgl = [...document.querySelectorAll("label.bidang")].find((l) =>
-  l.textContent.trim().startsWith("Tanggal target")
-);
-if (!labelTgl) { console.error("❌ label Tanggal target tak ditemukan"); process.exit(1); }
-const inputTgl = labelTgl.querySelector("input");
+const inputJudul = document.querySelector('[data-uji="tugas-judul"]');
+const inputTgl = document.querySelector('[data-uji="tugas-tanggal"]');
+if (!inputJudul || !inputTgl) {
+  console.error("❌ dialog tidak terbuka / field tugas tak ditemukan");
+  process.exit(1);
+}
 
 inputJudul.value = "Uji otomatis tugas";
 inputJudul.dispatchEvent(new Event("input", { bubbles: true }));
@@ -65,46 +58,63 @@ inputTgl.value = "2026-11-05";
 inputTgl.dispatchEvent(new Event("input", { bubbles: true }));
 await tunggu(50);
 
-const tombolSimpan = [...document.querySelectorAll(".modal .tombol")].find((b) =>
-  b.textContent.includes("Simpan")
-);
-tombolSimpan.click();
+document.querySelector('[data-uji="tugas-simpan"]').click();
 await tunggu(100);
 
 const tersimpan = JSON.parse(localStorage.getItem("terraverse.tasks") || "{}");
 console.log("tasks tersimpan:", tersimpan.tasks?.length, JSON.stringify(tersimpan.tasks?.[0]));
 if (tersimpan.tasks?.length !== 1) { console.error("❌ tugas tidak tersimpan"); process.exit(2); }
 
-const kartu = [...document.querySelectorAll(".kartu-tugas")].find((k) =>
+const kartu = [...document.querySelectorAll('[data-uji="kartu-tugas"]')].find((k) =>
   k.textContent.includes("Uji otomatis tugas")
 );
 if (!kartu) { console.error("❌ kartu tugas tidak tampil di board"); process.exit(3); }
-console.log("✅ Board menampilkan tugas:", kartu.querySelector(".judul-tugas")?.textContent);
+console.log("✅ Board menampilkan tugas:", kartu.querySelector('[data-uji="judul-tugas"]')?.textContent);
 
 /* ---------- 2. Tugas muncul di kalender ---------- */
-butirNav("Kalender").click();
+butirNav("kalender").click();
 await tunggu(100);
-const namaBulan = document.querySelector(".kepala h2")?.textContent.trim();
-console.log("Bulan tampil:", namaBulan);
+console.log("Bulan tampil:", document.querySelector('[data-uji="label-bulan"]')?.textContent.trim());
 
-const tombolBerikut = [...document.querySelectorAll(".kepala .tombol")].pop();
-tombolBerikut.click(); // ▶ ke November
-await tunggu(100);
-const chip = [...document.querySelectorAll(".chip-tugas")].find((c) =>
+const BULAN = [
+  "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+  "Juli", "Agustus", "September", "Oktober", "November", "Desember",
+];
+
+/** Geser kalender ke bulan dari ISO target, ke arah mana pun. */
+async function keBulan(iso) {
+  const [th, bl] = iso.split("-").map(Number);
+  const target = th * 12 + (bl - 1);
+  for (let i = 0; i < 60; i++) {
+    const label = document.querySelector('[data-uji="label-bulan"]')?.textContent.trim() ?? "";
+    const [nama, tahun] = label.split(" ");
+    const kini = Number(tahun) * 12 + BULAN.indexOf(nama);
+    if (kini === target) return;
+    const tombol = document.querySelector(
+      kini < target ? '[data-uji="bulan-sesudah"]' : '[data-uji="bulan-sebelum"]'
+    );
+    tombol.click();
+    await tunggu(50);
+  }
+}
+
+await keBulan("2026-11");
+const chip = [...document.querySelectorAll('[data-uji="chip-tugas"]')].find((c) =>
   c.textContent.includes("Uji otomatis tugas")
 );
-console.log("Bulan setelah ▶:", document.querySelector(".kepala h2")?.textContent.trim());
+console.log("Bulan target:", document.querySelector('[data-uji="label-bulan"]')?.textContent.trim());
 if (!chip) { console.error("❌ chip tugas tidak muncul di kalender November"); process.exit(4); }
 console.log("✅ Chip tugas di kalender:", chip.textContent.trim());
 
 /* ---------- 3. Tambah tujuan planning ---------- */
-const formTujuan = document.querySelector(".form-tujuan");
-const inputTujuan = formTujuan.querySelector("input:not([type=date])");
-const inputTglTujuan = formTujuan.querySelector("input[type=date]");
+const formTujuan = document.querySelector('[data-uji="form-tujuan"]');
+const inputTujuan = formTujuan.querySelector('[data-uji="tujuan-judul"]');
+const inputTglTujuan = formTujuan.querySelector('[data-uji="tujuan-tanggal"]');
 inputTujuan.value = "Uji otomatis tujuan";
 inputTujuan.dispatchEvent(new Event("input", { bubbles: true }));
 inputTglTujuan.value = "2026-11-20";
 inputTglTujuan.dispatchEvent(new Event("input", { bubbles: true }));
+await tunggu(50);
 formTujuan.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
 await tunggu(100);
 
@@ -112,19 +122,19 @@ const tujuanTersimpan = JSON.parse(localStorage.getItem("terraverse.planning") |
 console.log("tujuan tersimpan:", tujuanTersimpan.tujuan?.length, JSON.stringify(tujuanTersimpan.tujuan?.[0]));
 if (tujuanTersimpan.tujuan?.length !== 1) { console.error("❌ tujuan tidak tersimpan"); process.exit(5); }
 
-const chipTujuan = [...document.querySelectorAll(".chip-tujuan")].find((c) =>
+const chipTujuan = [...document.querySelectorAll('[data-uji="chip-tujuan"]')].find((c) =>
   c.textContent.includes("Uji otomatis tujuan")
 );
 if (!chipTujuan) { console.error("❌ chip tujuan tidak muncul di kalender"); process.exit(6); }
 console.log("✅ Chip tujuan di kalender:", chipTujuan.textContent.trim());
 
 /* ---------- 4. Checkbox tujuan ---------- */
-const ceklis = document.querySelector(".baris-salin input[type=checkbox]");
+const ceklis = document.querySelector('[data-uji="tujuan-cek"]');
 ceklis.click();
 await tunggu(50);
 const cekUlang = JSON.parse(localStorage.getItem("terraverse.planning"));
 console.log("selesai =", cekUlang.tujuan[0].selesai);
-if (ceklis !== true && cekUlang.tujuan[0].selesai !== true) { console.error("❌ checkbox tidak tersimpan"); process.exit(7); }
+if (cekUlang.tujuan[0].selesai !== true) { console.error("❌ checkbox tidak tersimpan"); process.exit(7); }
 console.log("✅ Checkbox tujuan bekerja");
 
 console.log("🏁 Semua uji interaksi lulus");
