@@ -1,10 +1,12 @@
 <script setup>
 import { ref, onMounted } from "vue";
+import { useRegisterSW } from "virtual:pwa-register/vue";
 import { gsap } from "gsap";
 import { halaman, pindahHalaman, imporData } from "./lib/state.js";
 import { alihkanTema } from "./lib/tema.js";
 import { unduhEkspor } from "./lib/storage.js";
 import { kurangiGerak, putarIkon } from "./lib/animasi.js";
+import { bisaPasang, pasangAplikasi } from "./lib/pwa.js";
 import BerandaView from "./views/BerandaView.vue";
 import TugasView from "./views/TugasView.vue";
 import KalenderView from "./views/KalenderView.vue";
@@ -17,6 +19,18 @@ const MENU = [
 
 const masukkan = ref(null);
 const temaAktif = ref(document.documentElement.dataset.tema || "gelap");
+
+const { needRefresh: perluMuatUlang, updateServiceWorker } = useRegisterSW({
+  immediate: true,
+});
+
+function muatUlang() {
+  updateServiceWorker(true);
+}
+
+function tundaPembaruan() {
+  perluMuatUlang.value = false;
+}
 
 onMounted(() => {
   temaAktif.value = document.documentElement.dataset.tema || "gelap";
@@ -107,6 +121,17 @@ function pilihFile(e) {
             <span class="msr">upload</span>
             <span class="util-btn__teks">Impor</span>
           </button>
+          <button
+            v-if="bisaPasang"
+            class="util-btn util-pasang"
+            data-uji="pasang-app"
+            title="Pasang aplikasi"
+            aria-label="Pasang aplikasi"
+            @click="pasangAplikasi"
+          >
+            <span class="msr">add_to_home_screen</span>
+            <span class="util-btn__teks">Pasang</span>
+          </button>
           <span class="util-sep" aria-hidden="true"></span>
           <button
             class="md-icon-button util-tema"
@@ -137,6 +162,28 @@ function pilihFile(e) {
         <span class="tag">Data tersimpan di peramban ini</span>
       </div>
     </footer>
+
+    <!-- ===== Pembaruan PWA ===== -->
+    <Transition name="pwa-banner">
+      <aside v-if="perluMuatUlang" class="pwa-banner" role="status" aria-live="polite">
+        <div class="pwa-banner__teks">
+          <span class="pwa-banner__label">Pembaruan tersedia</span>
+          <p>Versi baru Terraverse sudah siap dipakai.</p>
+        </div>
+        <div class="pwa-banner__aksi">
+          <button class="md-text-button pwa-banner__tombol" @click="tundaPembaruan">
+            Nanti
+          </button>
+          <button
+            class="md-filled-button pwa-banner__tombol"
+            data-uji="muat-ulang-pwa"
+            @click="muatUlang"
+          >
+            Muat ulang
+          </button>
+        </div>
+      </aside>
+    </Transition>
 
     <!-- ===== Navigasi bawah (layar kecil) ===== -->
     <nav class="md-nav-bar" aria-label="Navigasi utama">
@@ -329,6 +376,16 @@ function pilihFile(e) {
   display: none;
 }
 
+.util-pasang {
+  color: var(--sun);
+  border-color: color-mix(in srgb, var(--sun) 38%, transparent);
+}
+.util-pasang:hover {
+  color: var(--sun);
+  border-color: var(--sun);
+  background: var(--sun-soft);
+}
+
 .util-sep {
   width: 1px;
   height: 18px;
@@ -381,6 +438,78 @@ function pilihFile(e) {
 }
 .site-foot .tag {
   white-space: nowrap;
+}
+
+/* ---------- Banner pembaruan PWA ---------- */
+.pwa-banner {
+  position: fixed;
+  right: var(--gutter);
+  bottom: calc(var(--s5) + env(safe-area-inset-bottom));
+  z-index: 46;
+  width: min(430px, calc(100vw - 32px));
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--s3) var(--s4);
+  padding: 14px 16px;
+  border: 1px solid color-mix(in srgb, var(--sun) 40%, var(--line));
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  box-shadow: 0 18px 48px color-mix(in srgb, var(--paper) 55%, #000);
+}
+
+.pwa-banner__teks {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.pwa-banner__label {
+  display: block;
+  margin-bottom: 3px;
+  font-family: var(--f-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sun);
+}
+
+.pwa-banner__teks p {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--ink-dim);
+}
+
+.pwa-banner__aksi {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.pwa-banner__tombol {
+  height: 34px;
+  padding-inline: 12px;
+  font-size: 0.625rem;
+}
+
+.pwa-banner-enter-active,
+.pwa-banner-leave-active {
+  transition:
+    opacity var(--md-duration-medium-1) var(--md-easing-standard-decelerate),
+    transform var(--md-duration-medium-1) var(--md-easing-standard-decelerate);
+}
+
+.pwa-banner-enter-from,
+.pwa-banner-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pwa-banner-enter-active,
+  .pwa-banner-leave-active {
+    transition: none;
+  }
 }
 
 /* ---------- Navigasi bawah ---------- */
@@ -507,6 +636,16 @@ function pilihFile(e) {
   .site-foot .tag {
     margin-left: auto;
     font-size: 0.625rem;
+  }
+  .pwa-banner {
+    left: var(--gutter);
+    right: var(--gutter);
+    bottom: calc(64px + env(safe-area-inset-bottom));
+    width: auto;
+  }
+  .pwa-banner__aksi {
+    width: 100%;
+    justify-content: flex-end;
   }
 }
 </style>

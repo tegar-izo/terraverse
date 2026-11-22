@@ -14,6 +14,7 @@ Seluruh UI memakai token warna kertas/tinta/garis dengan aksen **hijau pastel**,
 -   **Tema** — hitam kehijauan sebagai bawaan, dengan toggle putih kehijauan (terang) yang tersimpan
 -   **Animasi GSAP** — reveal bertahap saat halaman dibuka, sel kalender saat bulan berganti, dan ikon tema saat diganti
 -   **Ekspor / Impor data** — backup satu file JSON
+-   **PWA** — bisa dipasang ke layar utama dengan ikon sendiri dan tetap terbuka saat offline setelah kunjungan pertama
 
 ## 🗂️ Struktur penting
 
@@ -25,12 +26,16 @@ src/
 │   ├── state.js      ← state reaktif + CRUD
 │   ├── calendar.js   ← util kalender (Indonesia)
 │   ├── animasi.js    ← helper GSAP (reveal, stagger, reduced-motion)
+│   ├── pwa.js        ← prompt install & state tombol Pasang
 │   └── tema.js       ← logika tema adaptif
 ├── views/            ← Beranda, Tugas, Kalender (planning ada di Kalender)
 ├── components/
 │   └── MiniKalender.vue  ← kalender ringkas di samping Beranda
 └── styles/main.css   ← token & komponen paper/ink (warna, tipografi,
                         garis rambut, motion)
+
+public/icons/        ← ikon PWA 192, 512, dan maskable
+vite.config.js       ← manifest PWA + konfigurasi service worker
 ```
 
 ## 🎨 Sistem visual
@@ -75,6 +80,21 @@ Gunakan tombol **Ekspor Data** untuk backup & **Impor Data** untuk restore (meng
 npm install
 npm run dev        # buka http://localhost:5173
 ```
+
+## 📱 PWA
+
+Build produksi menghasilkan `manifest.webmanifest`, `sw.js`, dan ikon yang sudah diprecache. Service worker sengaja hanya aktif di build produksi:
+
+```bash
+npm run build
+npm run preview    # uji install & offline di http://localhost:4173
+```
+
+Setelah dibuka lewat HTTPS (atau `localhost`), browser akan menawarkan **Install app / Pasang aplikasi**. Tombol **Pasang** juga muncul di header saat browser mengirim event `beforeinstallprompt`.
+
+Saat ada versi baru, banner **Pembaruan tersedia** tampil dengan tombol **Muat ulang**. Service worker baru sengaja menunggu (mode `prompt`) sampai tombol itu ditekan, jadi halaman tidak berganti di tengah pekerjaan. Pilihan **Nanti** menyembunyikan banner tanpa mengaktifkan versi baru.
+
+Seluruh tampilan dan aset lokal tersedia offline; data tetap disimpan di `localStorage`, dan warna `theme-color` mengikuti tema gelap/terang yang dipilih.
 
 ## 🧪 Verifikasi
 
