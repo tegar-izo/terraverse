@@ -46,12 +46,12 @@
   color-scheme: dark;
 
   /* ---------- Palet ---------- */
-  --paper: #000000;
-  --paper-raised: #0a0a0a;
-  --ink: #cdc4ba;
-  --ink-dim: #b0a9a0;
-  --ink-muted: #958f87;
-  --ink-faint: #807a73;
+  --paper: #07130d;
+  --paper-raised: #0c1b13;
+  --ink: #c9dacd;
+  --ink-dim: #b2c6b7;
+  --ink-muted: #93a898;
+  --ink-faint: #7b9081;
   --sun: #8fd3a4;
   --sun-soft: color-mix(in srgb, var(--sun) 14%, transparent);
 
@@ -174,15 +174,15 @@
   --md-shadow: #000000;
 }
 
-/* ---------- Skema terang: kertas tulang ---------- */
+/* ---------- Skema terang: putih kehijauan ---------- */
 [data-tema="terang"] {
   color-scheme: light;
-  --paper: #e9e3d7;
-  --paper-raised: #f2ede3;
-  --ink: #17130f;
-  --ink-dim: #3b332b;
-  --ink-muted: #5d544a;
-  --ink-faint: #7a7065;
+  --paper: #f1f7f1;
+  --paper-raised: #f8fcf8;
+  --ink: #10231a;
+  --ink-dim: #2c4337;
+  --ink-muted: #4f685b;
+  --ink-faint: #6b8377;
   --sun: #3e7d52;
 }
 
@@ -234,7 +234,7 @@
 .md-title-large { font-size: clamp(1.2rem, 2vw, 1.5rem); line-height: 1.15; }
 .md-title-medium {
   font-family: var(--f-sans);
-  font-size: 0.72rem;
+  font-size: 0.8125rem;
   line-height: 1.4;
   font-weight: 500;
   letter-spacing: 0.16em;
@@ -243,20 +243,20 @@
 }
 .md-title-small {
   font-family: var(--f-sans);
-  font-size: 0.8rem;
+  font-size: 0.9375rem;
   line-height: 1.35;
   font-weight: 700;
   letter-spacing: 0;
   color: var(--ink);
 }
 
-.md-body-large { font-size: 0.9rem; line-height: 1.65; font-weight: 400; }
-.md-body-medium { font-size: 0.82rem; line-height: 1.6; font-weight: 400; }
-.md-body-small { font-size: 0.74rem; line-height: 1.5; font-weight: 400; }
+.md-body-large { font-size: 1rem; line-height: 1.65; font-weight: 400; }
+.md-body-medium { font-size: 0.9375rem; line-height: 1.6; font-weight: 400; }
+.md-body-small { font-size: 0.875rem; line-height: 1.5; font-weight: 400; }
 
 .md-label-large {
   font-family: var(--f-mono);
-  font-size: 0.64rem;
+  font-size: 0.75rem;
   line-height: 1.4;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -264,7 +264,7 @@
 }
 .md-label-medium {
   font-family: var(--f-mono);
-  font-size: 0.5625rem;
+  font-size: 0.6875rem;
   line-height: 1.4;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -272,7 +272,7 @@
 }
 .md-label-small {
   font-family: var(--f-mono);
-  font-size: 0.5rem;
+  font-size: 0.625rem;
   line-height: 1.4;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -299,7 +299,7 @@ body {
 
 body {
   font-family: var(--f-sans);
-  font-size: clamp(0.8rem, 0.76rem + 0.2vw, 0.9rem);
+  font-size: clamp(0.9375rem, 0.9rem + 0.2vw, 1.0625rem);
   line-height: 1.65;
   letter-spacing: 0.01em;
   background: var(--paper);
@@ -389,7 +389,7 @@ a {
 .mono { font-family: var(--f-mono); }
 .tag {
   font-family: var(--f-mono);
-  font-size: 0.5625rem;
+  font-size: 0.6875rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink-faint);
@@ -402,7 +402,7 @@ a {
   gap: 0.7rem;
   color: var(--ink-muted);
   font-family: var(--f-sans);
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -454,7 +454,7 @@ a {
 .section-head__name {
   color: var(--ink);
   font-family: var(--f-sans);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -484,7 +484,7 @@ a {
   border-radius: var(--radius);
   cursor: pointer;
   font-family: var(--f-mono);
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   line-height: 1;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -622,7 +622,7 @@ a {
   box-shadow: none;
   cursor: pointer;
   font-family: var(--f-mono);
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   line-height: 1;
   font-weight: 400;
   letter-spacing: 0.14em;
@@ -666,14 +666,14 @@ a {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  height: 22px;
-  padding: 0 7px;
+  height: 24px;
+  padding: 0 8px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: transparent;
   color: var(--ink-muted);
   font-family: var(--f-mono);
-  font-size: 0.5625rem;
+  font-size: 0.6875rem;
   line-height: 1;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -705,9 +705,9 @@ a {
   color: var(--ink-faint);
 }
 .md-chip--kecil {
-  height: 19px;
-  padding: 0 5px;
-  font-size: 0.5rem;
+  height: 21px;
+  padding: 0 6px;
+  font-size: 0.625rem;
   letter-spacing: 0.08em;
 }
 .md-chip--kecil .msr {
@@ -768,7 +768,7 @@ a {
   background: transparent;
   color: var(--ink);
   font-family: var(--f-sans);
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   line-height: 1.5;
   letter-spacing: 0;
   outline: none;
@@ -808,7 +808,7 @@ a {
   background: var(--md-field-bg);
   color: var(--ink-muted);
   font-family: var(--f-sans);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   line-height: 1.4;
   letter-spacing: 0;
   font-weight: 400;
@@ -824,7 +824,7 @@ a {
 .md-text-field--area > .md-text-field__label {
   top: 0;
   font-family: var(--f-mono);
-  font-size: 0.5rem;
+  font-size: 0.625rem;
   line-height: 1.4;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -912,7 +912,7 @@ a {
   color: var(--ink-muted);
   cursor: pointer;
   font-family: var(--f-mono);
-  font-size: 0.5625rem;
+  font-size: 0.625rem;
   line-height: 1;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -999,7 +999,7 @@ a {
   cursor: pointer;
   text-align: left;
   font-family: var(--f-sans);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   line-height: 1;
   font-weight: 500;
   letter-spacing: 0.18em;

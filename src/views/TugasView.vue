@@ -418,7 +418,7 @@ function nomor(n) {
   align-items: center;
   gap: var(--s2);
   font-family: var(--f-sans);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -434,7 +434,7 @@ function nomor(n) {
 
 .kolom__jumlah {
   font-family: var(--f-mono);
-  font-size: 0.5625rem;
+  font-size: 0.6875rem;
   letter-spacing: 0.1em;
   color: var(--ink-faint);
 }
@@ -442,7 +442,7 @@ function nomor(n) {
 .kolom__kosong {
   padding: var(--s2) 2px;
   font-family: var(--f-mono);
-  font-size: 0.625rem;
+  font-size: 0.75rem;
   line-height: 1.6;
   letter-spacing: 0.03em;
   color: var(--ink-faint);
@@ -487,7 +487,7 @@ function nomor(n) {
 .tugas-card__judul {
   overflow-wrap: anywhere;
   font-family: var(--f-sans);
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   line-height: 1.35;
   font-weight: 600;
   color: var(--ink);
@@ -495,7 +495,7 @@ function nomor(n) {
 
 .tugas-card__deskripsi {
   color: var(--ink-muted);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   line-height: 1.5;
   white-space: pre-wrap;
 }
@@ -580,7 +580,7 @@ function nomor(n) {
 
 .form-status__label {
   font-family: var(--f-mono);
-  font-size: 0.5rem;
+  font-size: 0.625rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-muted);

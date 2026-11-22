@@ -329,7 +329,7 @@ function keTugas() {
 .kalender__hari span {
   padding: 9px 7px;
   font-family: var(--f-mono);
-  font-size: 0.5rem;
+  font-size: 0.625rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-faint);
@@ -392,7 +392,7 @@ function keTugas() {
 
 .kalender__angka {
   font-family: var(--f-mono);
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   line-height: 1;
   letter-spacing: 0.04em;
   color: var(--ink-muted);
@@ -404,7 +404,7 @@ function keTugas() {
   align-items: center;
   gap: 4px;
   max-width: 100%;
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   line-height: 1.4;
   color: var(--ink-dim);
 }
@@ -431,7 +431,7 @@ function keTugas() {
 
 .kalender__lebih {
   font-family: var(--f-mono);
-  font-size: 0.5rem;
+  font-size: 0.625rem;
   color: var(--ink-faint);
   padding-left: 7px;
 }
@@ -470,7 +470,7 @@ function keTugas() {
 .panel__judul {
   font-family: var(--f-display);
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   line-height: 1.2;
   letter-spacing: -0.05em;
   color: var(--ink);
@@ -478,7 +478,7 @@ function keTugas() {
 
 .panel__sub {
   font-family: var(--f-mono);
-  font-size: 0.5625rem;
+  font-size: 0.6875rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-faint);
@@ -486,7 +486,7 @@ function keTugas() {
 
 .panel__jumlah {
   font-family: var(--f-mono);
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   letter-spacing: 0.08em;
   color: var(--ink-faint);
 }
@@ -494,7 +494,7 @@ function keTugas() {
 .kosong {
   color: var(--ink-faint);
   font-family: var(--f-mono);
-  font-size: 0.625rem;
+  font-size: 0.75rem;
   line-height: 1.6;
   padding: var(--s1) 0;
 }
@@ -514,7 +514,7 @@ function keTugas() {
   min-height: 38px;
   padding: 6px 0;
   border-bottom: 1px solid var(--line-soft);
-  font-size: 0.8125rem;
+  font-size: 0.9rem;
   line-height: 1.4;
 }
 .agenda-item:last-child {
@@ -548,7 +548,7 @@ function keTugas() {
 .agenda-item__tautan {
   height: 24px;
   padding: 0;
-  font-size: 0.5rem;
+  font-size: 0.625rem;
 }
 
 .tujuan-item {
@@ -573,7 +573,7 @@ function keTugas() {
 }
 
 .tujuan-item__teks {
-  font-size: 0.8125rem;
+  font-size: 0.9rem;
   line-height: 1.4;
   color: var(--ink-dim);
   overflow-wrap: anywhere;
@@ -581,7 +581,7 @@ function keTugas() {
 
 .tujuan-item__tanggal {
   font-family: var(--f-mono);
-  font-size: 0.5625rem;
+  font-size: 0.6875rem;
   letter-spacing: 0.06em;
   color: var(--ink-faint);
   flex: none;
@@ -643,12 +643,12 @@ function keTugas() {
     height: 3px;
   }
   .kalender__hari span {
-    font-size: 0.4375rem;
+    font-size: 0.5625rem;
     padding: 7px 2px;
     text-align: center;
   }
   .kalender__angka {
-    font-size: 0.5625rem;
+    font-size: 0.625rem;
   }
 }
 </style>

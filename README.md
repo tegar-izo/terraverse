@@ -11,7 +11,7 @@ Seluruh UI memakai token warna kertas/tinta/garis dengan aksen **hijau pastel**,
 -   **Kalender** — grid bulanan 7 kolom (mulai Senin), agenda tanggal terpilih
 -   **Planning (di dalam Kalender)** — panel “Tujuan <bulan>” di kolom kanan: milestone bulanan ber-checkbox, tampil juga sebagai penanda di sel kalender
 -   **Navigasi adaptif** — header dengan tautan bernomor di desktop, rail nomor di layar sedang, dan navigation bar di layar kecil
--   **Tema** — kertas hitam sebagai bawaan, dengan toggle kertas tulang (terang) yang tersimpan
+-   **Tema** — hitam kehijauan sebagai bawaan, dengan toggle putih kehijauan (terang) yang tersimpan
 -   **Animasi GSAP** — reveal bertahap saat halaman dibuka, sel kalender saat bulan berganti, dan ikon tema saat diganti
 -   **Ekspor / Impor data** — backup satu file JSON
 
@@ -35,7 +35,7 @@ src/
 
 ## 🎨 Sistem visual
 
--   **Warna** — kertas hitam `#000`, tinta abu hangat `#cdc4ba`, aksen hijau pastel `#8fd3a4`, dan garis tipis dari campuran tinta 13–42%. Tema terang memakai kertas tulang `#e9e3d7` dengan aksen hijau `#3e7d52`.
+-   **Warna** — latar hitam kehijauan `#07130d`, tinta hijau pucat `#c9dacd`, aksen hijau pastel `#8fd3a4`, dan garis tipis dari campuran tinta 13–42%. Tema terang memakai latar putih kehijauan `#f1f7f1` dengan aksen hijau `#3e7d52`.
 -   **Tipografi** — **Paper Mono** untuk judul, teks isi, label, dan angka; ukuran judul diperbesar dan *tracking* dirapatkan agar tetap editorial.
 -   **Bentuk** — sudut 2px di semua permukaan; tanpa bayangan, tanpa pil. Pemisah memakai garis rambut 1px dan latar `paper-raised`.
 -   **Tekstur** — lapisan *grain* SVG halus di atas seluruh layar agar kertas terasa fisik.

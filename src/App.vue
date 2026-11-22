@@ -228,7 +228,7 @@ function pilihFile(e) {
 
 .brand__sub {
   font-family: var(--f-mono);
-  font-size: 7.5px;
+  font-size: 8.5px;
   line-height: 1;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -253,7 +253,7 @@ function pilihFile(e) {
 
 .nav-no {
   font-family: var(--f-mono);
-  font-size: 0.5rem;
+  font-size: 0.625rem;
   letter-spacing: 0.08em;
   color: var(--ink-faint);
   transition: color var(--md-duration-short-3) var(--md-easing-standard);
@@ -311,7 +311,7 @@ function pilihFile(e) {
   color: var(--ink-muted);
   cursor: pointer;
   font-family: var(--f-mono);
-  font-size: 0.5rem;
+  font-size: 0.625rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   transition:
@@ -365,7 +365,7 @@ function pilihFile(e) {
   align-items: center;
   gap: var(--s3);
   font-family: var(--f-sans);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--ink-muted);
@@ -413,7 +413,7 @@ function pilihFile(e) {
   color: var(--ink-muted);
   cursor: pointer;
   font-family: var(--f-sans);
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
@@ -434,7 +434,7 @@ function pilihFile(e) {
 }
 .navbar-no {
   font-family: var(--f-mono);
-  font-size: 0.4375rem;
+  font-size: 0.5625rem;
   letter-spacing: 0.06em;
   color: var(--ink-faint);
 }
@@ -476,7 +476,7 @@ function pilihFile(e) {
     display: flex;
   }
   .brand__sub {
-    font-size: 8px;
+    font-size: 9px;
   }
 }
 
@@ -506,7 +506,7 @@ function pilihFile(e) {
   }
   .site-foot .tag {
     margin-left: auto;
-    font-size: 0.4375rem;
+    font-size: 0.625rem;
   }
 }
 </style>

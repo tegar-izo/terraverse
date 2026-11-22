@@ -118,7 +118,7 @@ function buka(sel) {
 
 .mini-kalender__panah-dekor {
   font-family: var(--f-mono);
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   color: var(--ink-faint);
 }
 
@@ -134,7 +134,7 @@ function buka(sel) {
 
 .mini-kalender__label {
   font-family: var(--f-mono);
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   font-weight: 400;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -162,7 +162,7 @@ function buka(sel) {
 .mini-kalender__hari span {
   padding: 4px 0;
   font-family: var(--f-mono);
-  font-size: 0.4375rem;
+  font-size: 0.5625rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -216,7 +216,7 @@ function buka(sel) {
 
 .mini-kalender__angka {
   font-family: var(--f-mono);
-  font-size: 0.5625rem;
+  font-size: 0.625rem;
   line-height: 1;
   letter-spacing: 0.02em;
   font-variant-numeric: tabular-nums;

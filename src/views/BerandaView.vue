@@ -224,7 +224,7 @@ function nomorUrut(i) {
 
 .stat__label {
   font-family: var(--f-mono);
-  font-size: 0.5625rem;
+  font-size: 0.6875rem;
   line-height: 1.4;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -276,7 +276,7 @@ function nomorUrut(i) {
   background: transparent;
   color: var(--ink-dim);
   font-family: inherit;
-  font-size: 0.78rem;
+  font-size: 0.875rem;
   line-height: 1.3;
   text-align: left;
   cursor: pointer;
@@ -295,7 +295,7 @@ function nomorUrut(i) {
 
 .deadline-item__tanggal {
   font-family: var(--f-mono);
-  font-size: 0.5625rem;
+  font-size: 0.6875rem;
   letter-spacing: 0.08em;
   color: var(--sun);
   flex: none;
@@ -309,7 +309,7 @@ function nomorUrut(i) {
 
 .deadline-kosong {
   font-family: var(--f-mono);
-  font-size: 0.625rem;
+  font-size: 0.75rem;
   letter-spacing: 0.06em;
   color: var(--ink-faint);
 }
@@ -350,7 +350,7 @@ function nomorUrut(i) {
 
 .tool-card__no {
   font-family: var(--f-mono);
-  font-size: 0.5625rem;
+  font-size: 0.6875rem;
   letter-spacing: 0.12em;
   color: var(--ink-faint);
 }
@@ -414,7 +414,7 @@ function nomorUrut(i) {
 .tool-card__judul {
   font-family: var(--f-display);
   font-weight: 600;
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   line-height: 1.15;
   letter-spacing: -0.05em;
   color: var(--ink);
@@ -422,7 +422,7 @@ function nomorUrut(i) {
 }
 
 .tool-card__deskripsi {
-  font-size: 0.78rem;
+  font-size: 0.875rem;
   line-height: 1.5;
   color: var(--ink-muted);
   display: -webkit-box;
@@ -433,7 +433,7 @@ function nomorUrut(i) {
 
 .kosong {
   color: var(--ink-muted);
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
 }
 
 code {
