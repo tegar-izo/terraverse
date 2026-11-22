@@ -1,5 +1,5 @@
 <script setup>
-import { computed, reactive, ref } from "vue";
+import { computed, nextTick, onMounted, reactive, ref } from "vue";
 import {
   tugas,
   tujuan,
@@ -9,6 +9,7 @@ import {
   hapusTujuan,
   pindahHalaman,
 } from "../lib/state.js";
+import { animasiDaftar, useAnimasiMasuk } from "../lib/animasi.js";
 import {
   NAMA_BULAN,
   NAMA_HARI,
@@ -16,6 +17,10 @@ import {
   formatPanjang,
   isoHariIni,
 } from "../lib/calendar.js";
+
+const akar = ref(null);
+const gridEl = ref(null);
+useAnimasiMasuk(akar);
 
 const kini = isoHariIni();
 const [th, bl] = kini.split("-").map(Number);
@@ -54,6 +59,15 @@ const grid = computed(() =>
 );
 
 const terpilih = tanggalKalender;
+
+function animasiBulan() {
+  animasiDaftar(gridEl.value, ".kalender__sel", { stagger: 0.008 });
+}
+
+onMounted(async () => {
+  await nextTick();
+  animasiBulan();
+});
 
 /* ---------- Agenda tanggal terpilih ---------- */
 const agendaTugas = computed(() =>
@@ -99,34 +113,37 @@ function keTugas() {
 </script>
 
 <template>
-  <section class="kalender">
-    <header class="kalender__kepala">
-      <div>
+  <section ref="akar" class="kalender">
+    <header class="page-head kalender__kepala" data-anim="kepala">
+      <div class="page-head__kiri">
+        <p class="eyebrow"><span class="eyebrow__no">03</span> Kalender</p>
         <h2 class="md-headline-medium" data-uji="label-bulan">{{ labelBulan }}</h2>
-        <p class="md-body-medium kalender__sub">
+        <p class="md-body-medium page-head__sub">
           Klik tanggal untuk melihat agenda dan tujuan bulan ini.
         </p>
       </div>
-      <div class="kalender__nav">
-        <button class="md-icon-button" data-uji="bulan-sebelum" title="Bulan sebelumnya" @click="geserBulan(-1)">
-          <span class="msr">chevron_left</span>
-        </button>
-        <button class="md-text-button" @click="keHariIni">Hari ini</button>
-        <button class="md-icon-button" data-uji="bulan-sesudah" title="Bulan berikutnya" @click="geserBulan(1)">
-          <span class="msr">chevron_right</span>
-        </button>
+      <div class="kalender__kanan">
+        <div class="kalender__nav">
+          <button class="md-icon-button" data-uji="bulan-sebelum" title="Bulan sebelumnya" @click="geserBulan(-1)">
+            <span class="msr">chevron_left</span>
+          </button>
+          <button class="md-outlined-button kalender__hari-ini" @click="keHariIni">Hari ini</button>
+          <button class="md-icon-button" data-uji="bulan-sesudah" title="Bulan berikutnya" @click="geserBulan(1)">
+            <span class="msr">chevron_right</span>
+          </button>
+        </div>
       </div>
     </header>
 
     <div class="kalender__tata">
       <!-- ===== Grid bulan ===== -->
-      <div class="md-card md-card--outlined kalender__kartu">
+      <div class="kalender__kartu" data-anim="item">
         <div class="kalender__hari">
-          <span v-for="h of NAMA_HARI" :key="h" class="md-label-medium">{{ h }}</span>
+          <span v-for="h of NAMA_HARI" :key="h">{{ h }}</span>
         </div>
 
-        <Transition name="md-fade" mode="out-in">
-        <div class="kalender__grid" :key="bulanIso">
+        <Transition name="md-fade" mode="out-in" @after-enter="animasiBulan">
+        <div ref="gridEl" class="kalender__grid" :key="bulanIso">
           <button
             v-for="sel of grid"
             :key="sel.iso"
@@ -140,7 +157,7 @@ function keTugas() {
             :aria-label="sel.iso"
             @click="terpilih = sel.iso"
           >
-            <span class="md-label-large kalender__angka">{{ sel.hari }}</span>
+            <span class="kalender__angka">{{ String(sel.hari).padStart(2, "0") }}</span>
 
             <span v-if="sel.tugasDiHari.length" class="kalender__acara" data-uji="chip-tugas">
               <i class="kalender__titik kalender__titik--tugas"></i>
@@ -166,26 +183,27 @@ function keTugas() {
       <!-- ===== Panel samping ===== -->
       <div class="kalender__samping">
         <!-- Agenda -->
-        <div class="md-card md-card--filled panel">
+        <div class="panel" data-anim="item">
           <div class="panel__kepala">
-            <h3 class="md-title-medium">Agenda</h3>
-            <p class="md-body-small panel__sub">{{ formatPanjang(terpilih) }}</p>
+            <p class="tag">Tanggal terpilih</p>
+            <h3 class="panel__judul">Agenda</h3>
+            <p class="panel__sub">{{ formatPanjang(terpilih) }}</p>
           </div>
 
           <div
             v-if="agendaTugas.length === 0 && agendaTujuan.length === 0"
-            class="md-body-small kosong"
+            class="kosong"
           >
-            Tidak ada agenda di tanggal ini.
+            — Tidak ada agenda di tanggal ini.
           </div>
 
           <ul class="daftar">
             <li v-for="t of agendaTujuan" :key="t.id" class="agenda-item">
-              <span class="msr msr--isi agenda-item__ikon agenda-item__ikon--tujuan">flag</span>
+              <span class="agenda-item__ikon agenda-item__ikon--tujuan" aria-hidden="true"></span>
               <span class="agenda-item__teks" :class="{ selesai: t.selesai }">{{ t.judul }}</span>
             </li>
             <li v-for="t of agendaTugas" :key="t.id" class="agenda-item">
-              <span class="msr agenda-item__ikon">list</span>
+              <span class="agenda-item__ikon" aria-hidden="true"></span>
               <span class="agenda-item__teks" :class="{ selesai: t.status === 'selesai' }">
                 {{ t.judul }}
               </span>
@@ -197,13 +215,13 @@ function keTugas() {
         </div>
 
         <!-- Planning tujuan bulanan -->
-        <div class="md-card md-card--filled panel">
+        <div class="panel" data-anim="item">
           <div class="panel__kepala panel__kepala--baris">
-            <h3 class="md-title-medium">
-              <span class="msr msr--isi panel__ikon">flag</span>
-              Tujuan {{ NAMA_BULAN[bulan.value] }}
-            </h3>
-            <span class="md-chip md-chip--kecil">{{ tujuanBulan.length }}</span>
+            <div>
+              <p class="tag">Rencana bulanan</p>
+              <h3 class="panel__judul">Tujuan {{ NAMA_BULAN[bulan] }}</h3>
+            </div>
+            <span class="panel__jumlah">{{ String(tujuanBulan.length).padStart(2, "0") }}</span>
           </div>
 
           <TransitionGroup name="md-list" tag="ul" class="daftar">
@@ -219,15 +237,15 @@ function keTugas() {
                   {{ t.judul }}
                 </span>
               </label>
-              <small class="md-label-small tujuan-item__tanggal">
+              <small class="tujuan-item__tanggal">
                 {{ (t.tanggalTarget || "").slice(8) }}/{{ (t.tanggalTarget || "").slice(5, 7) }}
               </small>
               <button class="md-icon-button tujuan-item__hapus" title="Hapus" @click="buang(t)">
                 <span class="msr">close</span>
               </button>
             </li>
-            <li v-if="tujuanBulan.length === 0" key="tujuan-kosong" class="md-body-small kosong">
-              Belum ada tujuan bulan ini.
+            <li v-if="tujuanBulan.length === 0" key="tujuan-kosong" class="kosong">
+              — Belum ada tujuan bulan ini.
             </li>
           </TransitionGroup>
 
@@ -267,64 +285,78 @@ function keTugas() {
 .kalender {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--s6);
 }
 
-.kalender__kepala {
+.kalender__kanan {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.kalender__sub {
-  margin-top: 4px;
-  color: var(--md-on-surface-variant);
+  align-items: flex-end;
+  gap: var(--s3);
+  flex: none;
 }
 
 .kalender__nav {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
+}
+
+.kalender__hari-ini {
+  height: 34px;
+  padding: 0 12px;
 }
 
 .kalender__tata {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 16px;
+  gap: var(--s4);
   align-items: start;
 }
 
+/* ---------- Grid bulan ---------- */
 .kalender__kartu {
-  padding: 12px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  min-width: 0;
 }
 
 .kalender__hari {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  text-align: center;
-  color: var(--md-on-surface-variant);
-  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+.kalender__hari span {
+  padding: 9px 7px;
+  font-family: var(--f-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  border-right: 1px solid var(--line-soft);
+}
+.kalender__hari span:last-child {
+  border-right: none;
 }
 
 .kalender__grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
+  gap: 1px;
+  background: var(--line-soft);
 }
 
 .kalender__sel {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 3px;
-  min-height: 92px;
-  padding: 6px;
+  gap: 4px;
+  min-height: 96px;
+  padding: 7px;
   border: none;
-  border-radius: var(--md-shape-md);
-  background: transparent;
-  color: var(--md-on-surface);
+  background: var(--paper);
+  color: var(--ink-dim);
   cursor: pointer;
   font-family: inherit;
   text-align: left;
@@ -333,32 +365,38 @@ function keTugas() {
 }
 
 .kalender__sel:hover {
-  background: color-mix(in srgb, var(--md-on-surface) var(--md-state-hover), transparent);
+  background: var(--tint5);
 }
 
 .kalender__sel--luar {
-  opacity: 0.38;
+  color: var(--ink-faint);
+}
+.kalender__sel--luar .kalender__angka,
+.kalender__sel--luar .kalender__acara,
+.kalender__sel--luar .kalender__lebih {
+  opacity: 0.4;
 }
 
-.kalender__sel--kini {
-  box-shadow: inset 0 0 0 1px var(--md-primary);
+.kalender__sel--kini .kalender__angka {
+  color: var(--sun);
 }
 
 .kalender__sel--dipilih {
-  background: var(--md-primary-container);
-  color: var(--md-on-primary-container);
+  background: color-mix(in srgb, var(--sun) 8%, var(--paper));
+  box-shadow: inset 0 0 0 1px var(--sun);
 }
 
 .kalender__sel--dipilih:hover {
-  background: color-mix(
-    in srgb,
-    var(--md-on-primary-container) 6%,
-    var(--md-primary-container)
-  );
+  background: color-mix(in srgb, var(--sun) 12%, var(--paper));
 }
 
 .kalender__angka {
-  font-weight: 600;
+  font-family: var(--f-mono);
+  font-size: 0.625rem;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
 }
 
 .kalender__acara {
@@ -366,22 +404,9 @@ function keTugas() {
   align-items: center;
   gap: 4px;
   max-width: 100%;
-  padding: 1px 6px;
-  border-radius: var(--md-shape-xs);
-  background: var(--md-surface-container);
-  color: var(--md-on-surface-variant);
-  font-size: 11px;
-  line-height: 16px;
-  letter-spacing: 0.4px;
-}
-
-.kalender__sel--dipilih .kalender__acara {
-  background: var(--md-surface-container-lowest);
-}
-
-.kalender__acara--tujuan {
-  background: var(--md-tertiary-container);
-  color: var(--md-on-tertiary-container);
+  font-size: 0.625rem;
+  line-height: 1.4;
+  color: var(--ink-dim);
 }
 
 .kalender__acara-teks {
@@ -391,77 +416,92 @@ function keTugas() {
 }
 
 .kalender__titik {
-  width: 5px;
-  height: 5px;
-  border-radius: var(--md-shape-full);
+  width: 3px;
+  height: 3px;
   flex: none;
 }
 
 .kalender__titik--tugas {
-  background: var(--md-primary);
+  background: var(--sun);
 }
 
 .kalender__titik--tujuan {
-  background: var(--md-tertiary);
+  box-shadow: inset 0 0 0 1px var(--ink-muted);
 }
 
 .kalender__lebih {
-  font-size: 11px;
-  line-height: 16px;
-  color: var(--md-on-surface-variant);
-  padding-left: 4px;
+  font-family: var(--f-mono);
+  font-size: 0.5rem;
+  color: var(--ink-faint);
+  padding-left: 7px;
 }
 
 /* ---------- Panel samping ---------- */
 .kalender__samping {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--s4);
   min-width: 0;
 }
 
 .panel {
-  padding: 16px;
-  --md-field-bg: var(--md-surface-container-highest);
+  padding: var(--s4);
+  border: 1px solid var(--line);
+  background: transparent;
+  --md-field-bg: var(--paper);
 }
 
 .panel__kepala {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  margin-bottom: 12px;
+  gap: 5px;
+  padding-bottom: var(--s3);
+  margin-bottom: var(--s3);
+  border-bottom: 1px solid var(--line-soft);
 }
 
 .panel__kepala--baris {
   flex-direction: row;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--s3);
 }
 
-.panel__kepala h3 {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.panel__ikon {
-  color: var(--md-tertiary);
-  font-size: 18px;
+.panel__judul {
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: 1.1rem;
+  line-height: 1.2;
+  letter-spacing: -0.05em;
+  color: var(--ink);
 }
 
 .panel__sub {
-  color: var(--md-on-surface-variant);
+  font-family: var(--f-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.panel__jumlah {
+  font-family: var(--f-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
 }
 
 .kosong {
-  color: var(--md-on-surface-variant);
+  color: var(--ink-faint);
+  font-family: var(--f-mono);
+  font-size: 0.625rem;
+  line-height: 1.6;
+  padding: var(--s1) 0;
 }
 
 .daftar {
   display: flex;
   flex-direction: column;
-  gap: 4px;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -470,112 +510,145 @@ function keTugas() {
 .agenda-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  min-height: 40px;
-  font-size: 14px;
-  line-height: 20px;
+  gap: var(--s2);
+  min-height: 38px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line-soft);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+.agenda-item:last-child {
+  border-bottom: none;
 }
 
 .agenda-item__ikon {
-  font-size: 18px;
-  color: var(--md-primary);
+  width: 5px;
+  height: 5px;
+  flex: none;
+  background: var(--sun);
 }
 
 .agenda-item__ikon--tujuan {
-  color: var(--md-tertiary);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--ink-muted);
 }
 
 .agenda-item__teks {
   flex: 1;
   min-width: 0;
   overflow-wrap: anywhere;
+  color: var(--ink-dim);
 }
 
 .selesai {
   text-decoration: line-through;
-  opacity: 0.6;
+  opacity: 0.55;
 }
 
 .agenda-item__tautan {
-  height: 32px;
-  padding: 0 8px;
-  font-size: 12px;
+  height: 24px;
+  padding: 0;
+  font-size: 0.5rem;
 }
 
 .tujuan-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  min-height: 40px;
+  gap: var(--s2);
+  min-height: 36px;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+.tujuan-item:last-child {
+  border-bottom: none;
 }
 
 .tujuan-item__cek {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--s2);
   flex: 1;
   min-width: 0;
   cursor: pointer;
-  padding: 4px 0;
 }
 
 .tujuan-item__teks {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--ink-dim);
   overflow-wrap: anywhere;
 }
 
 .tujuan-item__tanggal {
-  color: var(--md-on-surface-variant);
+  font-family: var(--f-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
   flex: none;
 }
 
 .tujuan-item__hapus {
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
+  border-color: transparent;
 }
-
 .tujuan-item__hapus .msr {
-  font-size: 18px;
+  font-size: 14px;
 }
 
 .form-tujuan {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid var(--md-outline-variant);
+  gap: var(--s3);
+  margin-top: var(--s4);
+  padding-top: var(--s4);
+  border-top: 1px solid var(--line);
 }
 
 .form-tujuan__tombol {
-  align-self: flex-end;
+  align-self: flex-start;
 }
 
+/* ---------- Breakpoint ---------- */
 @media (min-width: 1100px) {
   .kalender__tata {
-    grid-template-columns: minmax(0, 1.7fr) minmax(300px, 1fr);
-    gap: 20px;
+    grid-template-columns: minmax(0, 1.75fr) minmax(290px, 1fr);
+    gap: var(--s4);
   }
 }
 
 @media (max-width: 599px) {
+  .kalender__kepala {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .kalender__kanan {
+    align-items: flex-start;
+  }
   .kalender__sel {
     min-height: 56px;
-    padding: 4px;
+    padding: 5px;
     align-items: center;
   }
   .kalender__acara {
     padding: 0;
-    background: transparent;
+    gap: 0;
   }
   .kalender__acara-teks,
   .kalender__lebih {
     display: none;
   }
-  .kalender__acara--tujuan {
-    background: transparent;
+  .kalender__titik {
+    width: 3px;
+    height: 3px;
   }
-  .kalender__hari .md-label-medium {
-    font-size: 10px;
+  .kalender__hari span {
+    font-size: 0.4375rem;
+    padding: 7px 2px;
+    text-align: center;
+  }
+  .kalender__angka {
+    font-size: 0.5625rem;
   }
 }
 </style>

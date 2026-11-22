@@ -1,17 +1,18 @@
 # 🌌 Terraverse — my space, my universe
 
-Dashboard untuk semua tools-mu (kedap-link ke halaman **GitHub Pages** tiap tool), lengkap dengan **tugas**, **planning tujuan bulanan**, dan **kalender**. Dibangun dengan **Vue 3 + Vite**, JavaScript & CSS murni, dengan tampilan **Material 3 (M3)** hijau pastel — tanpa library komponen tambahan.
+Dashboard untuk semua tools-mu (kedap-link ke halaman **GitHub Pages** tiap tool), lengkap dengan **tugas**, **planning tujuan bulanan**, dan **kalender**. Dibangun dengan **Vue 3 + Vite**, JavaScript & CSS murni, dengan tampilan editorial **paper & ink** yang terinspirasi [ryoku.dev](https://ryoku.dev/) — tanpa library komponen tambahan.
 
-Seluruh UI memakai role warna, typescale, shape, elevation, state layer, dan motion token M3. Tipografi tetap memakai **Paper Mono** sebagai brand typeface di semua teks.
+Seluruh UI memakai token warna kertas/tinta/garis dengan aksen **hijau pastel**, tipografi **Paper Mono** di semua teks, sudut 2px, serta garis rambut 1px sebagai pengganti bayangan. Huruf di-host sendiri di `public/fonts/`, dan animasi memakai **GSAP**.
 
 ## ✨ Fitur
 
 -   **Beranda** — kartu statistik (tools, tugas aktif, selesai bulan ini, 3 deadline terdekat) + grid kartu tools + mini kalender
--   **Tugas** — board 3 kolom (Todo / Dikerjakan / Selesai), drag & drop atau tombol panah, prioritas, tag tool; FAB “Tugas Baru” membuka dialog M3
+-   **Tugas** — board 3 kolom (Todo / Dikerjakan / Selesai), drag & drop atau tombol panah, prioritas, tag tool; FAB “Tugas Baru” membuka dialog tugas
 -   **Kalender** — grid bulanan 7 kolom (mulai Senin), agenda tanggal terpilih
 -   **Planning (di dalam Kalender)** — panel “Tujuan <bulan>” di kolom kanan: milestone bulanan ber-checkbox, tampil juga sebagai penanda di sel kalender
--   **Navigasi adaptif M3** — navigation bar di layar kecil, navigation rail di sedang, navigation drawer di lebar
--   **Tema adaptif** — ikut sistem + toggle terang/gelap yang tersimpan, dengan token M3 terang & gelap
+-   **Navigasi adaptif** — header dengan tautan bernomor di desktop, rail nomor di layar sedang, dan navigation bar di layar kecil
+-   **Tema** — kertas hitam sebagai bawaan, dengan toggle kertas tulang (terang) yang tersimpan
+-   **Animasi GSAP** — reveal bertahap saat halaman dibuka, sel kalender saat bulan berganti, dan ikon tema saat diganti
 -   **Ekspor / Impor data** — backup satu file JSON
 
 ## 🗂️ Struktur penting
@@ -23,22 +24,23 @@ src/
 │   ├── storage.js    ← localStorage, skema v1, ekspor/impor
 │   ├── state.js      ← state reaktif + CRUD
 │   ├── calendar.js   ← util kalender (Indonesia)
+│   ├── animasi.js    ← helper GSAP (reveal, stagger, reduced-motion)
 │   └── tema.js       ← logika tema adaptif
 ├── views/            ← Beranda, Tugas, Kalender (planning ada di Kalender)
 ├── components/
 │   └── MiniKalender.vue  ← kalender ringkas di samping Beranda
-└── styles/main.css   ← token & komponen M3 (color roles, typescale,
-                        shape, elevation, state layer, motion)
+└── styles/main.css   ← token & komponen paper/ink (warna, tipografi,
+                        garis rambut, motion)
 ```
 
-## 🎨 Material 3
+## 🎨 Sistem visual
 
--   **Color roles** — role lengkap untuk skema terang & gelap: `primary`, `secondary`, `tertiary`, `error`, `surface-container-lowest…highest`, `outline`, `inverse-*`, `scrim`.
--   **Tipografi** — typescale M3 (display/headline/title/body/label × large/medium/small) diterapkan pada Paper Mono; M3 memperbolehkan brand typeface sebagai pengganti Roboto.
--   **Shape** — skala 10 / 14 / 20 / 24 / 32 / full: field 10, chip 14, kartu/kolom/sel kalender 20, FAB 24, dialog 32, tombol & indikator full.
--   **Elevation & state layer** — level 1–5 plus state layer hover 8%, focus 10%, pressed 10%, dragged 16%.
--   **Motion** — transisi halaman *fade-through*, kartu tugas/tujuan masuk–keluar & bergeser antar kolom, dialog *scale + fade*, pergantian bulan, dan animasi indikator navigasi. Semua memakai durasi/easing M3 (standard & emphasized) dan otomatis dinonaktifkan dengan `prefers-reduced-motion`.
--   **Breakpoint** — mengikuti window size class: `<600px` navigation bar, `600–1199px` navigation rail, `≥1200px` navigation drawer.
+-   **Warna** — kertas hitam `#000`, tinta abu hangat `#cdc4ba`, aksen hijau pastel `#8fd3a4`, dan garis tipis dari campuran tinta 13–42%. Tema terang memakai kertas tulang `#e9e3d7` dengan aksen hijau `#3e7d52`.
+-   **Tipografi** — **Paper Mono** untuk judul, teks isi, label, dan angka; ukuran judul diperbesar dan *tracking* dirapatkan agar tetap editorial.
+-   **Bentuk** — sudut 2px di semua permukaan; tanpa bayangan, tanpa pil. Pemisah memakai garis rambut 1px dan latar `paper-raised`.
+-   **Tekstur** — lapisan *grain* SVG halus di atas seluruh layar agar kertas terasa fisik.
+-   **Motion** — reveal halaman dan kartu bertahap, sel kalender ber-stagger saat bulan berganti, serta rotasi ikon tema; dipadukan dengan transisi CSS untuk dialog dan kartu. Semua animasi GSAP otomatis dilewati saat `prefers-reduced-motion` aktif.
+-   **Breakpoint** — `<600px` navigation bar bawah, `600–1079px` rail nomor, `≥1080px` tautan lengkap di header.
 
 ## 🔧 Menambah tool baru (tanpa ubah kode!)
 
@@ -63,7 +65,7 @@ Semua data disimpan di browser (`localStorage`) dengan struktur bersih siap migr
 | ------------------ | ------------------------------------ |
 | `terraverse.tasks` | `{ "schemaVersion": 1, "tasks": [...] }` |
 | `terraverse.planning` | `{ "schemaVersion": 1, "tujuan": [...] }`    |
-| `terraverse.tema`  | `terang` / `gelap` (kosong = ikut sistem) |
+| `terraverse.tema`  | `gelap` (bawaan) / `terang` |
 
 Gunakan tombol **Ekspor Data** untuk backup & **Impor Data** untuk restore (mengganti data lama).
 

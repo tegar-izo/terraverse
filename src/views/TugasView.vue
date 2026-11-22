@@ -7,12 +7,16 @@ import {
   perbaruiTugas,
   hapusTugas,
 } from "../lib/state.js";
+import { useAnimasiMasuk } from "../lib/animasi.js";
+
+const akar = ref(null);
+useAnimasiMasuk(akar);
 
 const ID_KOLOM = ["todo", "dikerjakan", "selesai"];
 const KOLOM = [
-  { id: "todo", label: "Todo", ikon: "inbox" },
-  { id: "dikerjakan", label: "Dikerjakan", ikon: "pending" },
-  { id: "selesai", label: "Selesai", ikon: "check_circle" },
+  { id: "todo", label: "Todo" },
+  { id: "dikerjakan", label: "Dikerjakan" },
+  { id: "selesai", label: "Selesai" },
 ];
 const STATUS = [
   { id: "todo", label: "Todo" },
@@ -141,26 +145,33 @@ function onTombol(e) {
 }
 onMounted(() => document.addEventListener("keydown", onTombol));
 onUnmounted(() => document.removeEventListener("keydown", onTombol));
+
+function nomor(n) {
+  return String(n).padStart(2, "0");
+}
 </script>
 
 <template>
-  <section class="tugas">
-    <header class="tugas__kepala">
-      <div>
+  <section ref="akar" class="tugas">
+    <header class="page-head tugas__kepala" data-anim="kepala">
+      <div class="page-head__kiri">
+        <p class="eyebrow"><span class="eyebrow__no">02</span> Tugas</p>
         <h2 class="md-headline-medium">Tugas</h2>
-        <p class="md-body-medium tugas__sub">
+        <p class="md-body-medium page-head__sub">
           Geser kartu antar kolom, atau klik untuk mengedit.
         </p>
       </div>
-      <button
-        class="md-fab md-fab--extended tugas__fab"
-        data-uji="tugas-baru"
-        aria-label="Tugas baru"
-        @click="bukaTambah"
-      >
-        <span class="msr">add</span>
-        <span class="md-label-large tugas__fab-teks">Tugas Baru</span>
-      </button>
+      <div class="tugas__kanan">
+        <button
+          class="md-filled-button tugas__fab"
+          data-uji="tugas-baru"
+          aria-label="Tugas baru"
+          @click="bukaTambah"
+        >
+          <span class="msr">add</span>
+          <span class="tugas__fab-teks">Tugas Baru</span>
+        </button>
+      </div>
     </header>
 
     <div class="board">
@@ -168,28 +179,29 @@ onUnmounted(() => document.removeEventListener("keydown", onTombol));
         v-for="k of kolom"
         :key="k.id"
         class="kolom"
+        data-anim="item"
         :class="{ 'kolom--sasaran': atasKolom === k.id }"
         @dragover.prevent="partasKolom(k.id)"
         @dragleave.prevent="atasKolom === k.id && (atasKolom = null)"
         @drop.prevent="lepasKolom(k.id)"
       >
         <header class="kolom__kepala">
-          <h3 class="md-title-small">
-            <span class="msr">{{ k.ikon }}</span>
+          <h3 class="kolom__judul">
+            <i class="kolom__titik" aria-hidden="true"></i>
             {{ k.label }}
           </h3>
-          <span class="md-chip md-chip--kecil">{{ k.daftar.length }}</span>
+          <span class="kolom__jumlah">{{ nomor(k.daftar.length) }}</span>
         </header>
 
-        <div v-if="k.id === 'todo' && k.daftar.length === 0" class="kolom__kosong md-body-small">
-          Belum ada tugas. Tekan tombol Tugas Baru untuk mulai.
+        <div v-if="k.id === 'todo' && k.daftar.length === 0" class="kolom__kosong">
+          Belum ada tugas. Tekan Tugas Baru untuk mulai.
         </div>
 
         <TransitionGroup name="md-list" tag="div" class="kolom__daftar">
           <article
             v-for="t of k.daftar"
             :key="t.id"
-            class="md-card md-card--filled tugas-card"
+            class="md-card md-card--outlined tugas-card"
             :class="{ 'tugas-card--selesai': t.status === 'selesai' }"
             data-uji="kartu-tugas"
             draggable="true"
@@ -198,13 +210,13 @@ onUnmounted(() => document.removeEventListener("keydown", onTombol));
             @click="bukaEdit(t)"
           >
             <div class="tugas-card__kepala">
-              <b class="md-title-small tugas-card__judul" data-uji="judul-tugas">{{ t.judul }}</b>
+              <b class="tugas-card__judul" data-uji="judul-tugas">{{ t.judul }}</b>
               <span class="md-chip md-chip--kecil" :class="kelasPrioritas(t.prioritas)">
                 {{ NAMA_PRIORITAS[t.prioritas] || "Sedang" }}
               </span>
             </div>
 
-            <p v-if="t.deskripsi" class="md-body-small tugas-card__deskripsi">
+            <p v-if="t.deskripsi" class="tugas-card__deskripsi">
               {{ t.deskripsi }}
             </p>
 
@@ -258,9 +270,12 @@ onUnmounted(() => document.removeEventListener("keydown", onTombol));
         aria-labelledby="judul-dialog"
         @submit.prevent="simpanModal"
       >
-        <h3 id="judul-dialog" class="md-headline-small">
-          {{ idSedangEdit ? "Edit Tugas" : "Tugas Baru" }}
-        </h3>
+        <div class="dialog__kepala">
+          <p class="tag">{{ idSedangEdit ? "Ubah entri" : "Entri baru" }}</p>
+          <h3 id="judul-dialog" class="md-headline-small">
+            {{ idSedangEdit ? "Edit Tugas" : "Tugas Baru" }}
+          </h3>
+        </div>
 
         <label class="md-text-field" :class="{ 'md-text-field--terisi': rancangan.judul }">
           <span class="md-text-field__label">Judul</span>
@@ -309,7 +324,7 @@ onUnmounted(() => document.removeEventListener("keydown", onTombol));
         </div>
 
         <div class="form-status">
-          <span class="md-label-large form-status__label">Status</span>
+          <span class="form-status__label">Status</span>
           <div class="md-segmented" role="group" aria-label="Status tugas">
             <button
               v-for="s of STATUS"
@@ -353,97 +368,109 @@ onUnmounted(() => document.removeEventListener("keydown", onTombol));
 .tugas {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--s6);
 }
 
-.tugas__kepala {
+.tugas__kanan {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.tugas__sub {
-  margin-top: 4px;
-  color: var(--md-on-surface-variant);
+  align-items: flex-end;
+  gap: var(--s3);
+  flex: none;
 }
 
 .board {
   display: grid;
-  grid-template-columns: repeat(3, minmax(280px, 1fr));
-  gap: 12px;
-  align-items: start;
+  grid-template-columns: repeat(3, minmax(270px, 1fr));
+  gap: 1px;
+  align-items: stretch;
   overflow-x: auto;
-  padding-bottom: 8px;
+  background: var(--line-soft);
+  border: 1px solid var(--line-soft);
   scroll-snap-type: x proximity;
 }
 
 .kolom {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  min-height: 220px;
-  padding: 12px;
-  border-radius: var(--md-shape-md);
-  background: var(--md-surface-container-low);
+  gap: var(--s3);
+  min-height: 260px;
+  padding: var(--s3);
+  background: var(--paper);
   scroll-snap-align: start;
   transition: background-color var(--md-duration-short-3) var(--md-easing-standard);
 }
 
 .kolom--sasaran {
-  background: var(--md-secondary-container);
+  background: color-mix(in srgb, var(--sun) 7%, var(--paper));
 }
 
 .kolom__kepala {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  padding: 4px 4px 0;
+  gap: var(--s2);
+  padding: var(--s1) 0 var(--s3);
+  border-bottom: 1px solid var(--line);
 }
 
-.kolom__kepala h3 {
+.kolom__judul {
   display: flex;
   align-items: center;
-  gap: 6px;
-  color: var(--md-on-surface-variant);
+  gap: var(--s2);
+  font-family: var(--f-sans);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink);
 }
 
-.kolom__kepala .msr {
-  font-size: 18px;
+.kolom__titik {
+  width: 4px;
+  height: 4px;
+  background: var(--ink);
+  flex: none;
+}
+
+.kolom__jumlah {
+  font-family: var(--f-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.1em;
+  color: var(--ink-faint);
 }
 
 .kolom__kosong {
-  color: var(--md-on-surface-variant);
-  padding: 4px;
+  padding: var(--s2) 2px;
+  font-family: var(--f-mono);
+  font-size: 0.625rem;
+  line-height: 1.6;
+  letter-spacing: 0.03em;
+  color: var(--ink-faint);
 }
 
 .kolom__daftar {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--s2);
 }
 
 .tugas-card {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 12px;
+  gap: var(--s2);
+  padding: var(--s3);
   cursor: grab;
-  background: var(--md-surface-container-highest);
+  background: transparent;
+  border-color: var(--line-soft);
 }
 
 .tugas-card:hover {
-  background: color-mix(
-    in srgb,
-    var(--md-on-surface) 4%,
-    var(--md-surface-container-highest)
-  );
-  transform: translateY(-1px);
+  background: var(--tint5);
+  border-color: var(--line-strong);
 }
 
 .tugas-card--selesai {
-  opacity: 0.68;
+  opacity: 0.55;
 }
 
 .tugas-card--selesai .tugas-card__judul {
@@ -454,15 +481,22 @@ onUnmounted(() => document.removeEventListener("keydown", onTombol));
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--s2);
 }
 
 .tugas-card__judul {
   overflow-wrap: anywhere;
+  font-family: var(--f-sans);
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  font-weight: 600;
+  color: var(--ink);
 }
 
 .tugas-card__deskripsi {
-  color: var(--md-on-surface-variant);
+  color: var(--ink-muted);
+  font-size: 0.75rem;
+  line-height: 1.5;
   white-space: pre-wrap;
 }
 
@@ -476,18 +510,19 @@ onUnmounted(() => document.removeEventListener("keydown", onTombol));
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 4px;
-  padding-top: 4px;
-  border-top: 1px solid var(--md-outline-variant);
+  gap: var(--s1);
+  padding-top: var(--s2);
+  border-top: 1px solid var(--line-soft);
 }
 
 .tugas-card__aksi .md-icon-button {
-  width: 32px;
-  height: 32px;
+  width: 26px;
+  height: 26px;
+  border-color: transparent;
 }
 
 .tugas-card__aksi .md-icon-button .msr {
-  font-size: 18px;
+  font-size: 15px;
 }
 
 /* ---------- Dialog ---------- */
@@ -499,8 +534,8 @@ onUnmounted(() => document.removeEventListener("keydown", onTombol));
 .md-dialog-enter-active .tugas-dialog,
 .md-dialog-leave-active .tugas-dialog {
   transition:
-    opacity var(--md-duration-medium-1) var(--md-easing-emphasized-decelerate),
-    transform var(--md-duration-medium-1) var(--md-easing-emphasized-decelerate);
+    opacity var(--md-duration-medium-1) var(--md-easing-standard-decelerate),
+    transform var(--md-duration-medium-1) var(--md-easing-standard-decelerate);
 }
 
 .md-dialog-enter-from,
@@ -510,34 +545,45 @@ onUnmounted(() => document.removeEventListener("keydown", onTombol));
 
 .md-dialog-enter-from .tugas-dialog {
   opacity: 0;
-  transform: translateY(24px) scale(0.92);
+  transform: translateY(16px);
 }
 
 .md-dialog-leave-to .tugas-dialog {
   opacity: 0;
-  transform: scale(0.96);
 }
 
 .tugas-dialog {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--s4);
+}
+
+.dialog__kepala {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  padding-bottom: var(--s3);
+  border-bottom: 1px solid var(--line);
 }
 
 .form-baris {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: var(--s3);
 }
 
 .form-status {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--s2);
 }
 
 .form-status__label {
-  color: var(--md-on-surface-variant);
+  font-family: var(--f-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
 }
 
 .form-status .md-segmented {
@@ -560,11 +606,12 @@ onUnmounted(() => document.removeEventListener("keydown", onTombol));
 @media (max-width: 599px) {
   .tugas__fab {
     position: fixed;
-    right: 16px;
-    bottom: calc(96px + env(safe-area-inset-bottom));
+    right: var(--s4);
+    bottom: calc(68px + env(safe-area-inset-bottom));
     z-index: 25;
+    height: 46px;
+    min-width: 46px;
     padding: 0;
-    min-width: 56px;
   }
   .tugas__fab-teks {
     display: none;
@@ -579,8 +626,17 @@ onUnmounted(() => document.removeEventListener("keydown", onTombol));
     width: 100%;
     height: 100dvh;
     max-height: 100dvh;
-    border-radius: 0;
-    padding: 16px;
+    border: none;
+    padding: var(--s4);
+    --md-field-bg: var(--paper-raised);
+  }
+  .board {
+    border: none;
+    background: transparent;
+    gap: var(--s3);
+  }
+  .kolom {
+    border: 1px solid var(--line-soft);
   }
 }
 </style>

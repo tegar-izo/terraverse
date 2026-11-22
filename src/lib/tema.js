@@ -1,21 +1,13 @@
 import { bacaTema, simpanTema } from "./storage.js";
 
-const mql = globalThis.matchMedia?.("(prefers-color-scheme: dark)");
-let temaTersimpan = bacaTema(); // "" berarti ikut sistem
+let temaTersimpan = bacaTema(); // "gelap" secara bawaan, "terang" bila dipilih
 
 function saatIni() {
-  if (temaTersimpan === "gelap" || temaTersimpan === "terang") {
-    return temaTersimpan;
-  }
-  return mql?.matches ? "gelap" : "terang";
+  return temaTersimpan === "terang" ? "terang" : "gelap";
 }
 
 export function terapkanTema() {
   document.documentElement.dataset.tema = saatIni();
-}
-
-export function ikutSistem() {
-  return temaTersimpan === "";
 }
 
 export function alihkanTema() {
@@ -24,4 +16,4 @@ export function alihkanTema() {
   terapkanTema();
 }
 
-mql?.addEventListener("change", terapkanTema);
+terapkanTema();

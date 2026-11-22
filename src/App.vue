@@ -1,8 +1,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
+import { gsap } from "gsap";
 import { halaman, pindahHalaman, imporData } from "./lib/state.js";
-import { alihkanTema, ikutSistem } from "./lib/tema.js";
+import { alihkanTema } from "./lib/tema.js";
 import { unduhEkspor } from "./lib/storage.js";
+import { kurangiGerak, putarIkon } from "./lib/animasi.js";
 import BerandaView from "./views/BerandaView.vue";
 import TugasView from "./views/TugasView.vue";
 import KalenderView from "./views/KalenderView.vue";
@@ -14,15 +16,25 @@ const MENU = [
 ];
 
 const masukkan = ref(null);
-const temaAktif = ref(document.documentElement.dataset.tema || "terang");
+const temaAktif = ref(document.documentElement.dataset.tema || "gelap");
 
 onMounted(() => {
-  temaAktif.value = document.documentElement.dataset.tema || "terang";
+  temaAktif.value = document.documentElement.dataset.tema || "gelap";
+  if (!kurangiGerak()) {
+    gsap.from(".site-head__in", {
+      y: -14,
+      opacity: 0,
+      duration: 0.55,
+      ease: "power3.out",
+      clearProps: "transform,opacity",
+    });
+  }
 });
 
 function klikTema() {
   alihkanTema();
-  temaAktif.value = document.documentElement.dataset.tema || "terang";
+  temaAktif.value = document.documentElement.dataset.tema || "gelap";
+  putarIkon(document.querySelector(".util-tema .msr"));
 }
 
 function pilihFile(e) {
@@ -43,140 +55,102 @@ function pilihFile(e) {
 </script>
 
 <template>
-  <div class="md-shell">
-    <!-- ===== Navigation drawer (expanded ≥1200px) ===== -->
-    <aside class="md-nav-drawer" aria-label="Navigasi utama">
-      <div class="drawer-brand">
-        <span class="msr msr--isi drawer-brand__logo">planet</span>
-        <div>
-          <h1 class="md-title-medium">Terraverse</h1>
-          <p class="md-body-small drawer-brand__sub">my space, my universe</p>
-        </div>
-      </div>
-
-      <nav class="drawer-nav">
-        <button
-          v-for="m of MENU"
-          :key="m.id"
-          class="md-nav-item"
-          :class="{ 'md-nav-item--aktif': halaman === m.id }"
-          :data-uji="`nav-${m.id}`"
-          :aria-current="halaman === m.id ? 'page' : null"
-          @click="pindahHalaman(m.id)"
-        >
-          <span class="md-nav-item__ikon">
-            <span class="msr" :class="{ 'msr--isi': halaman === m.id }">{{ m.ikon }}</span>
-          </span>
-          <span>{{ m.label }}</span>
-        </button>
-      </nav>
-
-      <div class="drawer-foot">
-        <button class="md-list-item" title="Ekspor data" @click="unduhEkspor">
-          <span class="msr">download</span>
-          <span class="md-label-large">Ekspor data</span>
-        </button>
-        <button class="md-list-item" title="Impor data" @click="masukkan.click()">
-          <span class="msr">upload</span>
-          <span class="md-label-large">Impor data</span>
-        </button>
-        <button
-          class="md-list-item"
-          :title="ikutSistem() ? 'Tema: ikut sistem' : 'Tema: pilihanmu'"
-          @click="klikTema"
-        >
-          <span class="msr msr--isi">{{ temaAktif === "gelap" ? "light_mode" : "dark_mode" }}</span>
-          <span class="md-label-large">
-            {{ temaAktif === "gelap" ? "Tema terang" : "Tema gelap" }}
+  <div class="site">
+    <!-- ===== Kepala situs ===== -->
+    <header class="site-head">
+      <div class="site-head__in md-top-app-bar">
+        <button class="brand" title="Terraverse — Beranda" @click="pindahHalaman('beranda')">
+          <span class="msr msr--isi brand__mark" aria-hidden="true">planet</span>
+          <span class="brand__text">
+            <span class="brand__name">Terraverse</span>
+            <span class="brand__sub">my space, my universe</span>
           </span>
         </button>
-      </div>
-    </aside>
 
-    <!-- ===== Navigation rail (600–1199px) ===== -->
-    <nav class="md-nav-rail" aria-label="Navigasi utama">
-      <button
-        class="md-icon-button rail-brand"
-        title="Terraverse"
-        @click="pindahHalaman('beranda')"
-      >
-        <span class="msr msr--isi">planet</span>
-      </button>
+        <nav class="md-nav-drawer" aria-label="Navigasi utama">
+          <button
+            v-for="(m, i) of MENU"
+            :key="m.id"
+            class="md-nav-item"
+            :class="{ 'md-nav-item--aktif': halaman === m.id }"
+            :data-uji="`nav-${m.id}`"
+            :aria-current="halaman === m.id ? 'page' : null"
+            @click="pindahHalaman(m.id)"
+          >
+            <span class="nav-no">{{ String(i + 1).padStart(2, "0") }}</span>
+            <span>{{ m.label }}</span>
+          </button>
+        </nav>
 
-      <button
-        v-for="m of MENU"
-        :key="m.id"
-        class="rail-item"
-        :data-uji="`nav-${m.id}`"
-        :aria-current="halaman === m.id ? 'page' : null"
-        @click="pindahHalaman(m.id)"
-      >
-        <span class="rail-indikator">
-          <span class="msr" :class="{ 'msr--isi': halaman === m.id }">{{ m.ikon }}</span>
-        </span>
-        <span class="md-label-medium">{{ m.label }}</span>
-      </button>
+        <nav class="md-nav-rail" aria-label="Navigasi utama">
+          <button
+            v-for="(m, i) of MENU"
+            :key="m.id"
+            class="md-nav-item rail-item"
+            :class="{ 'md-nav-item--aktif': halaman === m.id }"
+            :data-uji="`nav-${m.id}`"
+            :aria-current="halaman === m.id ? 'page' : null"
+            :title="m.label"
+            :aria-label="m.label"
+            @click="pindahHalaman(m.id)"
+          >
+            <span class="nav-no">{{ String(i + 1).padStart(2, "0") }}</span>
+          </button>
+        </nav>
 
-      <div class="rail-foot">
-        <button class="md-icon-button" title="Ekspor data" @click="unduhEkspor">
-          <span class="msr">download</span>
-        </button>
-        <button class="md-icon-button" title="Impor data" @click="masukkan.click()">
-          <span class="msr">upload</span>
-        </button>
-        <button
-          class="md-icon-button"
-          :title="ikutSistem() ? 'Tema: ikut sistem' : 'Tema: pilihanmu'"
-          @click="klikTema"
-        >
-          <span class="msr msr--isi">{{ temaAktif === "gelap" ? "light_mode" : "dark_mode" }}</span>
-        </button>
-      </div>
-    </nav>
-
-    <!-- ===== Top app bar + konten (compact) ===== -->
-    <div class="shell-main">
-      <header class="md-top-app-bar">
-        <div class="topbar-brand">
-          <span class="msr msr--isi">planet</span>
-          <b class="md-title-medium">Terraverse</b>
-        </div>
-        <div class="topbar-aksi">
-          <button class="md-icon-button" title="Ekspor data" @click="unduhEkspor">
+        <div class="site-head__util">
+          <button class="util-btn" title="Ekspor data" @click="unduhEkspor">
             <span class="msr">download</span>
+            <span class="util-btn__teks">Ekspor</span>
           </button>
-          <button class="md-icon-button" title="Impor data" @click="masukkan.click()">
+          <button class="util-btn" title="Impor data" @click="masukkan.click()">
             <span class="msr">upload</span>
+            <span class="util-btn__teks">Impor</span>
           </button>
-          <button class="md-icon-button" title="Ganti tema" @click="klikTema">
+          <span class="util-sep" aria-hidden="true"></span>
+          <button
+            class="md-icon-button util-tema"
+            :title="temaAktif === 'gelap' ? 'Tema terang' : 'Tema gelap'"
+            :aria-label="temaAktif === 'gelap' ? 'Tema terang' : 'Tema gelap'"
+            @click="klikTema"
+          >
             <span class="msr msr--isi">{{ temaAktif === "gelap" ? "light_mode" : "dark_mode" }}</span>
           </button>
         </div>
-      </header>
+      </div>
+    </header>
 
-      <main class="md-content">
-        <Transition name="md-view" mode="out-in">
-          <BerandaView v-if="halaman === 'beranda'" key="beranda" />
-          <TugasView v-else-if="halaman === 'tugas'" key="tugas" />
-          <KalenderView v-else key="kalender" />
-        </Transition>
-      </main>
-    </div>
+    <!-- ===== Konten ===== -->
+    <main class="md-content">
+      <Transition name="md-view" mode="out-in">
+        <BerandaView v-if="halaman === 'beranda'" key="beranda" />
+        <TugasView v-else-if="halaman === 'tugas'" key="tugas" />
+        <KalenderView v-else key="kalender" />
+      </Transition>
+    </main>
 
-    <!-- ===== Navigation bar (compact <600px) ===== -->
+    <footer class="site-foot">
+      <div class="site-foot__in">
+        <span class="msr site-foot__mark" aria-hidden="true">planet</span>
+        <span>Terraverse</span>
+        <span class="site-foot__lead" aria-hidden="true"></span>
+        <span class="tag">Data tersimpan di peramban ini</span>
+      </div>
+    </footer>
+
+    <!-- ===== Navigasi bawah (layar kecil) ===== -->
     <nav class="md-nav-bar" aria-label="Navigasi utama">
       <button
-        v-for="m of MENU"
+        v-for="(m, i) of MENU"
         :key="m.id"
         class="navbar-item"
+        :class="{ 'navbar-item--aktif': halaman === m.id }"
         :data-uji="`nav-${m.id}`"
         :aria-current="halaman === m.id ? 'page' : null"
         @click="pindahHalaman(m.id)"
       >
-        <span class="navbar-indikator">
-          <span class="msr" :class="{ 'msr--isi': halaman === m.id }">{{ m.ikon }}</span>
-        </span>
-        <span class="md-label-medium">{{ m.label }}</span>
+        <span class="navbar-no">{{ String(i + 1).padStart(2, "0") }}</span>
+        <span class="navbar-label">{{ m.label }}</span>
       </button>
     </nav>
 
@@ -191,251 +165,348 @@ function pilihFile(e) {
 </template>
 
 <style scoped>
-.md-shell {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  min-height: 100vh;
-  background: var(--md-surface);
-}
-
-.md-content {
-  min-width: 0;
-  width: 100%;
-  max-width: 1440px;
-  margin-inline: auto;
-  padding: 8px 16px calc(104px + env(safe-area-inset-bottom));
-}
-
-.shell-main {
-  min-width: 0;
-}
-
-/* ---------- Drawer ---------- */
-.md-nav-drawer {
-  display: none;
+.site {
+  display: flex;
   flex-direction: column;
-  gap: 8px;
+  min-height: 100vh;
+  background: var(--paper);
+}
+
+/* ---------- Kepala ---------- */
+.site-head {
   position: sticky;
   top: 0;
-  height: 100vh;
-  overflow: auto;
-  padding: 16px 12px;
-  background: var(--md-surface-container-low);
+  z-index: 40;
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
-.drawer-brand {
+.site-head__in {
+  max-width: var(--max);
+  margin-inline: auto;
+  padding: 0 var(--gutter);
+  height: 64px;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 8px 12px 20px;
+  gap: var(--s5);
 }
 
-.drawer-brand__logo {
-  font-size: 40px;
-  color: var(--md-primary);
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+  flex: none;
 }
 
-.drawer-brand__sub {
-  margin-top: 2px;
-  color: var(--md-on-surface-variant);
-  font-style: italic;
+.brand__mark {
+  font-size: 22px;
+  line-height: 1;
+  color: var(--sun);
 }
 
-.drawer-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.drawer-foot {
-  margin-top: auto;
-  padding-top: 12px;
-  border-top: 1px solid var(--md-outline-variant);
+.brand__text {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.drawer-foot .md-list-item {
-  min-height: 48px;
+.brand__name {
+  font-family: var(--f-display);
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.05em;
 }
 
-/* ---------- Rail ---------- */
+.brand__sub {
+  font-family: var(--f-mono);
+  font-size: 7.5px;
+  line-height: 1;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+/* ---------- Navigasi desktop / sedang ---------- */
+.md-nav-drawer {
+  display: none;
+  align-items: center;
+  gap: 26px;
+  margin-inline: auto;
+}
+
 .md-nav-rail {
   display: none;
-  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  padding: 12px 0;
-  background: var(--md-surface);
-  border-right: 1px solid var(--md-outline-variant);
+  gap: 20px;
+  margin-inline: auto;
 }
 
-.rail-brand {
-  color: var(--md-primary);
-  font-size: 24px;
-  margin-bottom: 12px;
+.nav-no {
+  font-family: var(--f-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  transition: color var(--md-duration-short-3) var(--md-easing-standard);
 }
-.rail-brand .msr {
-  font-size: 28px;
+
+.md-nav-item--aktif .nav-no {
+  color: var(--sun);
 }
 
 .rail-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  width: 72px;
-  padding: 4px 0;
-  border: none;
-  background: transparent;
-  color: var(--md-on-surface-variant);
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.rail-indikator {
-  display: grid;
-  place-items: center;
-  width: 56px;
+  width: 32px;
   height: 32px;
-  border-radius: var(--md-shape-full);
-  transition: background-color var(--md-duration-short-3) var(--md-easing-standard);
+  justify-content: center;
+  border: 1px solid var(--line-soft);
+  color: var(--ink-faint);
+}
+.rail-item:hover {
+  border-color: var(--line-strong);
+}
+.rail-item.md-nav-item--aktif {
+  border-color: var(--line-strong);
+  background: var(--tint5);
 }
 
-.rail-item:hover .rail-indikator {
-  background: color-mix(in srgb, var(--md-on-surface) var(--md-state-hover), transparent);
+.md-nav-item {
+  position: relative;
+}
+.md-nav-item--aktif::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 1px;
+  background: var(--sun);
 }
 
-.rail-item[aria-current="page"] {
-  color: var(--md-on-surface);
-}
-
-.rail-item[aria-current="page"] .rail-indikator {
-  background: var(--md-secondary-container);
-  color: var(--md-on-secondary-container);
-}
-
-.rail-item[aria-current="page"] .rail-indikator .msr,
-.navbar-item[aria-current="page"] .navbar-indikator .msr,
-.md-nav-item--aktif .md-nav-item__ikon .msr {
-  animation: md-nav-pop var(--md-duration-medium-1) var(--md-easing-emphasized-decelerate);
-}
-
-@keyframes md-nav-pop {
-  0% { transform: scale(0.7); }
-  55% { transform: scale(1.12); }
-  100% { transform: scale(1); }
-}
-
-.rail-foot {
-  margin-top: auto;
+/* ---------- Util kanan ---------- */
+.site-head__util {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  gap: 6px;
+  flex: none;
 }
 
-/* ---------- Navigation bar ---------- */
+.util-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 32px;
+  padding: 0 9px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--ink-muted);
+  cursor: pointer;
+  font-family: var(--f-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition:
+    border-color var(--md-duration-short-3) var(--md-easing-standard),
+    color var(--md-duration-short-3) var(--md-easing-standard);
+}
+.util-btn .msr {
+  font-size: 16px;
+}
+.util-btn:hover {
+  border-color: var(--line-soft);
+  color: var(--ink);
+}
+.util-btn__teks {
+  display: none;
+}
+
+.util-sep {
+  width: 1px;
+  height: 18px;
+  background: var(--line);
+  margin-inline: 2px;
+}
+
+.util-tema {
+  border-color: transparent;
+}
+.util-tema:hover {
+  border-color: var(--line-strong);
+}
+
+/* ---------- Konten ---------- */
+.md-content {
+  flex: 1;
+  width: 100%;
+  max-width: var(--max);
+  margin-inline: auto;
+  padding: var(--s6) var(--gutter) calc(var(--s8) + 56px);
+}
+
+/* ---------- Kaki ---------- */
+.site-foot {
+  border-top: 1px solid var(--line-soft);
+  margin-top: auto;
+}
+.site-foot__in {
+  max-width: var(--max);
+  margin-inline: auto;
+  padding: var(--s4) var(--gutter) calc(var(--s4) + env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  font-family: var(--f-sans);
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+.site-foot__mark {
+  font-size: 12px;
+  color: var(--ink-faint);
+}
+.site-foot__lead {
+  flex: 1;
+  height: 1px;
+  background: var(--line-soft);
+}
+.site-foot .tag {
+  white-space: nowrap;
+}
+
+/* ---------- Navigasi bawah ---------- */
 .md-nav-bar {
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 30;
+  z-index: 45;
   display: flex;
-  justify-content: space-around;
-  gap: 4px;
-  height: 80px;
-  padding: 0 8px env(safe-area-inset-bottom);
-  background: var(--md-surface-container);
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  border-top: 1px solid var(--line);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .navbar-item {
+  position: relative;
   flex: 1;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  padding: 8px 0 0;
+  gap: 6px;
+  height: 52px;
+  padding: 0;
   border: none;
+  border-right: 1px solid var(--line-soft);
   background: transparent;
-  color: var(--md-on-surface-variant);
+  color: var(--ink-muted);
   cursor: pointer;
-  font-family: inherit;
+  font-family: var(--f-sans);
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.navbar-item:last-child {
+  border-right: none;
+}
+.navbar-item--aktif {
+  color: var(--ink);
+}
+.navbar-item--aktif::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--sun);
+}
+.navbar-no {
+  font-family: var(--f-mono);
+  font-size: 0.4375rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+}
+.navbar-item--aktif .navbar-no {
+  color: var(--sun);
 }
 
-.navbar-indikator {
-  display: grid;
-  place-items: center;
-  width: 64px;
-  height: 32px;
-  border-radius: var(--md-shape-full);
-  transition: background-color var(--md-duration-short-3) var(--md-easing-standard);
-}
-
-.navbar-item:hover .navbar-indikator {
-  background: color-mix(in srgb, var(--md-on-surface) var(--md-state-hover), transparent);
-}
-
-.navbar-item[aria-current="page"] {
-  color: var(--md-on-surface);
-}
-
-.navbar-item[aria-current="page"] .navbar-indikator {
-  background: var(--md-secondary-container);
-  color: var(--md-on-secondary-container);
-}
-
-/* ---------- Top app bar (compact) ---------- */
-.topbar-brand {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--md-primary);
-}
-
-.topbar-brand b {
-  color: var(--md-on-surface);
-}
-
-.topbar-aksi {
-  display: flex;
-  gap: 4px;
-}
-
-/* ---------- Breakpoint M3 ---------- */
+/* ---------- Breakpoint ---------- */
 @media (min-width: 600px) {
-  .md-shell {
-    grid-template-columns: 80px minmax(0, 1fr);
+  .site-head__in {
+    height: 68px;
+  }
+  .md-content {
+    padding-top: var(--s7);
+    padding-bottom: var(--s8);
+  }
+  .md-nav-bar {
+    display: none;
   }
   .md-nav-rail {
     display: flex;
   }
-  .md-nav-bar,
-  .md-top-app-bar {
-    display: none;
-  }
-  .md-content {
-    padding: 24px 24px 40px;
+  .site-foot__in {
+    padding-bottom: var(--s4);
   }
 }
 
-@media (min-width: 1200px) {
-  .md-shell {
-    grid-template-columns: 280px minmax(0, 1fr);
+@media (min-width: 760px) {
+  .util-btn__teks {
+    display: inline;
   }
+}
+
+@media (min-width: 1080px) {
   .md-nav-rail {
     display: none;
   }
   .md-nav-drawer {
     display: flex;
   }
+  .brand__sub {
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 599px) {
+  .site-head__in {
+    height: 58px;
+    gap: var(--s3);
+  }
+  .brand__name {
+    font-size: 20px;
+  }
+  .brand__sub {
+    display: none;
+  }
+  .site-head__util {
+    margin-left: auto;
+  }
   .md-content {
-    padding: 32px 32px 48px;
+    padding-top: var(--s5);
+    padding-bottom: calc(var(--s8) + 40px);
+  }
+  .site-foot {
+    padding-bottom: 52px;
+  }
+  .site-foot__lead {
+    display: none;
+  }
+  .site-foot .tag {
+    margin-left: auto;
+    font-size: 0.4375rem;
   }
 }
 </style>
