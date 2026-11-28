@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="id">
+<html lang="id" data-tema="gelap">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,15 +13,399 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="apple-mobile-web-app-title" content="Terraverse" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="manifest" href="manifest.webmanifest" />
     <title>Terraverse — my space, my universe</title>
     <link
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='44' cy='52' r='28' fill='%237fb98f'/%3E%3Cellipse cx='44' cy='52' rx='44' ry='13' fill='none' stroke='%23b7e0c2' stroke-width='7' transform='rotate(-20 44 52)'/%3E%3C/svg%3E"
     />
+    <script>
+      // Terapkan tema tersimpan sebelum halaman digambar (hindari kedip).
+      try {
+        const tema = localStorage.getItem("terraverse.tema");
+        document.documentElement.dataset.tema = tema === "terang" ? "terang" : "gelap";
+      } catch {}
+    </script>
+    <!-- Nunito: satu keluarga huruf untuk seluruh antarmuka -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300..1000;1,300..1000&display=swap"
+    />
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
+    <div class="site">
+      <!-- ===== Kepala situs ===== -->
+      <header class="site-head">
+        <div class="site-head__in md-top-app-bar">
+          <button class="brand" title="Terraverse — Beranda" data-pindah="beranda">
+            <span class="msr msr--isi brand__mark" aria-hidden="true">planet</span>
+            <span class="brand__text">
+              <span class="brand__name">Terraverse</span>
+              <span class="brand__sub">my space, my universe</span>
+            </span>
+          </button>
+
+          <nav class="md-nav-drawer" aria-label="Navigasi utama">
+            <button class="md-nav-item" data-pindah="beranda" data-uji="nav-beranda" aria-current="page">
+              <span class="nav-no">01</span><span>Beranda</span>
+            </button>
+            <button class="md-nav-item" data-pindah="tugas" data-uji="nav-tugas">
+              <span class="nav-no">02</span><span>Tugas</span>
+            </button>
+            <button class="md-nav-item" data-pindah="kalender" data-uji="nav-kalender">
+              <span class="nav-no">03</span><span>Kalender</span>
+            </button>
+          </nav>
+
+          <nav class="md-nav-rail" aria-label="Navigasi utama">
+            <button class="md-nav-item rail-item" data-pindah="beranda" data-uji="nav-beranda" title="Beranda" aria-label="Beranda" aria-current="page">
+              <span class="nav-no">01</span>
+            </button>
+            <button class="md-nav-item rail-item" data-pindah="tugas" data-uji="nav-tugas" title="Tugas" aria-label="Tugas">
+              <span class="nav-no">02</span>
+            </button>
+            <button class="md-nav-item rail-item" data-pindah="kalender" data-uji="nav-kalender" title="Kalender" aria-label="Kalender">
+              <span class="nav-no">03</span>
+            </button>
+          </nav>
+
+          <div class="site-head__util">
+            <button class="util-btn" id="tombol-ekspor" title="Ekspor data">
+              <span class="msr">download</span>
+              <span class="util-btn__teks">Ekspor</span>
+            </button>
+            <button class="util-btn" id="tombol-impor" title="Impor data">
+              <span class="msr">upload</span>
+              <span class="util-btn__teks">Impor</span>
+            </button>
+            <button
+              class="util-btn util-pasang"
+              id="tombol-pasang"
+              data-uji="pasang-app"
+              title="Pasang aplikasi"
+              aria-label="Pasang aplikasi"
+              hidden
+            >
+              <span class="msr">add_to_home_screen</span>
+              <span class="util-btn__teks">Pasang</span>
+            </button>
+            <span class="util-sep" aria-hidden="true"></span>
+            <button class="md-icon-button util-tema" id="tombol-tema" title="Tema terang" aria-label="Tema terang">
+              <span class="msr msr--isi" id="ikon-tema">light_mode</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- ===== Konten ===== -->
+      <main class="md-content">
+        <!-- ---------- Beranda ---------- -->
+        <section class="halaman beranda" data-halaman="beranda">
+          <header class="page-head">
+            <div class="page-head__kiri">
+              <p class="eyebrow"><span class="eyebrow__no">01</span> Dasbor</p>
+              <h2 class="md-headline-medium">Dashboard</h2>
+              <p class="md-body-medium page-head__sub">Ringkasan ruang kerjamu hari ini.</p>
+            </div>
+          </header>
+
+          <div class="beranda__tata">
+            <div class="beranda__utama">
+              <div class="stat-grid">
+                <div class="stat">
+                  <span class="stat__angka md-display-small" id="stat-tools">0</span>
+                  <span class="stat__label">Tools</span>
+                </div>
+
+                <button class="stat stat--aksi" data-uji="stat-tugas" data-pindah="tugas">
+                  <span class="msr stat__panah">arrow_outward</span>
+                  <span class="stat__angka md-display-small" id="stat-tugas-aktif">0</span>
+                  <span class="stat__label">Tugas aktif</span>
+                </button>
+
+                <div class="stat">
+                  <span class="stat__angka md-display-small" id="stat-selesai">0</span>
+                  <span class="stat__label">Selesai bulan ini</span>
+                </div>
+
+                <div class="stat stat--deadline">
+                  <span class="stat__label">Deadline terdekat</span>
+                  <div class="deadline-list" id="daftar-deadline"></div>
+                </div>
+              </div>
+
+              <section class="bagian">
+                <div class="section-head">
+                  <span class="section-head__dot" aria-hidden="true"></span>
+                  <span class="section-head__name">Tools</span>
+                  <span class="section-head__lead" aria-hidden="true"></span>
+                  <span class="tag" id="jumlah-tools">0 tersedia</span>
+                </div>
+
+                <div class="grid-tool" id="grid-tool"></div>
+              </section>
+            </div>
+
+            <aside class="beranda__samping">
+              <div class="mini-kalender" data-uji="mini-kalender">
+                <div class="mini-kalender__atas">
+                  <span class="tag">Kalender</span>
+                  <span class="mini-kalender__garis" aria-hidden="true"></span>
+                  <span class="mini-kalender__panah-dekor" aria-hidden="true">→</span>
+                </div>
+
+                <div class="mini-kalender__kepala">
+                  <button class="md-icon-button mini-kalender__nav" title="Bulan sebelumnya" data-uji="mini-sebelum" id="mini-sebelum">
+                    <span class="msr">chevron_left</span>
+                  </button>
+                  <b class="mini-kalender__label" data-uji="mini-label" id="mini-label"></b>
+                  <button class="md-icon-button mini-kalender__nav" title="Bulan berikutnya" data-uji="mini-sesudah" id="mini-sesudah">
+                    <span class="msr">chevron_right</span>
+                  </button>
+                </div>
+
+                <div class="mini-kalender__hari">
+                  <span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span><span>Min</span>
+                </div>
+
+                <div class="mini-kalender__grid" id="mini-grid"></div>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <!-- ---------- Tugas ---------- -->
+        <section class="halaman tugas" data-halaman="tugas" hidden>
+          <header class="page-head tugas__kepala">
+            <div class="page-head__kiri">
+              <p class="eyebrow"><span class="eyebrow__no">02</span> Tugas</p>
+              <h2 class="md-headline-medium">Tugas</h2>
+              <p class="md-body-medium page-head__sub">
+                Geser kartu antar kolom, atau klik untuk mengedit.
+              </p>
+            </div>
+            <div class="tugas__kanan">
+              <button class="md-filled-button tugas__fab" data-uji="tugas-baru" aria-label="Tugas baru" id="tombol-tugas-baru">
+                <span class="msr">add</span>
+                <span class="tugas__fab-teks">Tugas Baru</span>
+              </button>
+            </div>
+          </header>
+
+          <div class="board" id="board">
+            <section class="kolom" data-kolom="todo">
+              <header class="kolom__kepala">
+                <h3 class="kolom__judul"><i class="kolom__titik" aria-hidden="true"></i> Todo</h3>
+                <span class="kolom__jumlah" id="jumlah-todo">00</span>
+              </header>
+              <div class="kolom__kosong" id="kosong-todo" hidden>
+                Belum ada tugas. Tekan Tugas Baru untuk mulai.
+              </div>
+              <div class="kolom__daftar" id="daftar-todo"></div>
+            </section>
+
+            <section class="kolom" data-kolom="dikerjakan">
+              <header class="kolom__kepala">
+                <h3 class="kolom__judul"><i class="kolom__titik" aria-hidden="true"></i> Dikerjakan</h3>
+                <span class="kolom__jumlah" id="jumlah-dikerjakan">00</span>
+              </header>
+              <div class="kolom__daftar" id="daftar-dikerjakan"></div>
+            </section>
+
+            <section class="kolom" data-kolom="selesai">
+              <header class="kolom__kepala">
+                <h3 class="kolom__judul"><i class="kolom__titik" aria-hidden="true"></i> Selesai</h3>
+                <span class="kolom__jumlah" id="jumlah-selesai">00</span>
+              </header>
+              <div class="kolom__daftar" id="daftar-selesai"></div>
+            </section>
+          </div>
+        </section>
+
+        <!-- ---------- Kalender ---------- -->
+        <section class="halaman kalender" data-halaman="kalender" hidden>
+          <header class="page-head kalender__kepala">
+            <div class="page-head__kiri">
+              <p class="eyebrow"><span class="eyebrow__no">03</span> Kalender</p>
+              <h2 class="md-headline-medium" data-uji="label-bulan" id="label-bulan"></h2>
+              <p class="md-body-medium page-head__sub">
+                Klik tanggal untuk melihat agenda dan tujuan bulan ini.
+              </p>
+            </div>
+            <div class="kalender__kanan">
+              <div class="kalender__nav">
+                <button class="md-icon-button" data-uji="bulan-sebelum" title="Bulan sebelumnya" id="bulan-sebelum">
+                  <span class="msr">chevron_left</span>
+                </button>
+                <button class="md-outlined-button kalender__hari-ini" id="tombol-hari-ini">Hari ini</button>
+                <button class="md-icon-button" data-uji="bulan-sesudah" title="Bulan berikutnya" id="bulan-sesudah">
+                  <span class="msr">chevron_right</span>
+                </button>
+              </div>
+            </div>
+          </header>
+
+          <div class="kalender__tata">
+            <div class="kalender__kartu">
+              <div class="kalender__hari">
+                <span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span><span>Min</span>
+              </div>
+              <div class="kalender__grid" id="kalender-grid"></div>
+            </div>
+
+            <div class="kalender__samping">
+              <div class="panel">
+                <div class="panel__kepala">
+                  <p class="tag">Tanggal terpilih</p>
+                  <h3 class="panel__judul">Agenda</h3>
+                  <p class="panel__sub" id="tanggal-terpilih"></p>
+                </div>
+                <div class="kosong" id="agenda-kosong" hidden>— Tidak ada agenda di tanggal ini.</div>
+                <ul class="daftar" id="agenda-list"></ul>
+              </div>
+
+              <div class="panel">
+                <div class="panel__kepala panel__kepala--baris">
+                  <div>
+                    <p class="tag">Rencana bulanan</p>
+                    <h3 class="panel__judul" id="judul-tujuan"></h3>
+                  </div>
+                  <span class="panel__jumlah" id="jumlah-tujuan">00</span>
+                </div>
+
+                <ul class="daftar" id="tujuan-list"></ul>
+
+                <form class="form-tujuan" data-uji="form-tujuan" id="form-tujuan">
+                  <label class="md-text-field" id="field-tujuan">
+                    <span class="md-text-field__label">Tujuan baru</span>
+                    <input id="input-tujuan" data-uji="tujuan-judul" placeholder=" " autocomplete="off" />
+                  </label>
+
+                  <label class="md-text-field md-text-field--terisi">
+                    <span class="md-text-field__label">Tanggal</span>
+                    <input id="input-tujuan-tanggal" data-uji="tujuan-tanggal" type="date" />
+                  </label>
+
+                  <button class="md-filled-button form-tujuan__tombol" type="submit" id="tombol-tujuan">
+                    Tambah tujuan
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-foot">
+        <div class="site-foot__in">
+          <span class="msr site-foot__mark" aria-hidden="true">planet</span>
+          <span>Terraverse</span>
+          <span class="site-foot__lead" aria-hidden="true"></span>
+          <span class="tag">Data tersimpan di peramban ini</span>
+        </div>
+      </footer>
+
+      <!-- ===== Pembaruan PWA ===== -->
+      <aside class="pwa-banner" id="pwa-banner" role="status" aria-live="polite" hidden>
+        <div class="pwa-banner__teks">
+          <span class="pwa-banner__label">Pembaruan tersedia</span>
+          <p>Versi baru Terraverse sudah siap dipakai.</p>
+        </div>
+        <div class="pwa-banner__aksi">
+          <button class="md-text-button pwa-banner__tombol" id="pwa-nanti">Nanti</button>
+          <button class="md-filled-button pwa-banner__tombol" data-uji="muat-ulang-pwa" id="pwa-muat-ulang">
+            Muat ulang
+          </button>
+        </div>
+      </aside>
+
+      <!-- ===== Navigasi bawah (layar kecil) ===== -->
+      <nav class="md-nav-bar" aria-label="Navigasi utama">
+        <button class="navbar-item" data-pindah="beranda" data-uji="nav-beranda" aria-current="page">
+          <span class="navbar-no">01</span><span class="navbar-label">Beranda</span>
+        </button>
+        <button class="navbar-item" data-pindah="tugas" data-uji="nav-tugas">
+          <span class="navbar-no">02</span><span class="navbar-label">Tugas</span>
+        </button>
+        <button class="navbar-item" data-pindah="kalender" data-uji="nav-kalender">
+          <span class="navbar-no">03</span><span class="navbar-label">Kalender</span>
+        </button>
+      </nav>
+
+      <input id="masukan-file" type="file" accept="application/json,.json" hidden />
+    </div>
+
+    <!-- ===== Dialog tugas ===== -->
+    <div class="md-scrim" id="dialog-tugas" data-uji="dialog-tugas" hidden>
+      <form class="md-dialog tugas-dialog" role="dialog" aria-modal="true" aria-labelledby="judul-dialog" id="form-tugas">
+        <div class="dialog__kepala">
+          <p class="tag" id="dialog-tag">Entri baru</p>
+          <h3 id="judul-dialog" class="md-headline-small">Tugas Baru</h3>
+        </div>
+
+        <label class="md-text-field" id="field-judul">
+          <span class="md-text-field__label">Judul</span>
+          <input id="input-judul" data-uji="tugas-judul" required placeholder=" " autocomplete="off" />
+        </label>
+
+        <label class="md-text-field md-text-field--area">
+          <span class="md-text-field__label">Deskripsi</span>
+          <textarea id="input-deskripsi" data-uji="tugas-deskripsi" rows="3" placeholder=" "></textarea>
+        </label>
+
+        <div class="form-baris">
+          <label class="md-text-field" id="field-tanggal">
+            <span class="md-text-field__label">Tanggal target</span>
+            <input id="input-tanggal" data-uji="tugas-tanggal" type="date" required />
+          </label>
+
+          <label class="md-text-field md-text-field--terisi">
+            <span class="md-text-field__label">Prioritas</span>
+            <select id="input-prioritas" data-uji="tugas-prioritas">
+              <option value="rendah">Rendah</option>
+              <option value="sedang" selected>Sedang</option>
+              <option value="tinggi">Tinggi</option>
+            </select>
+            <span class="msr md-text-field__trailing">arrow_drop_down</span>
+          </label>
+        </div>
+
+        <div class="form-status">
+          <span class="form-status__label">Status</span>
+          <div class="md-segmented" role="group" aria-label="Status tugas" id="pilih-status">
+            <button type="button" class="md-segmented__item" data-status="todo" data-uji="status-todo">
+              <span class="msr">check</span> Todo
+            </button>
+            <button type="button" class="md-segmented__item" data-status="dikerjakan" data-uji="status-dikerjakan">
+              <span class="msr">check</span> Proses
+            </button>
+            <button type="button" class="md-segmented__item" data-status="selesai" data-uji="status-selesai">
+              <span class="msr">check</span> Selesai
+            </button>
+          </div>
+        </div>
+
+        <label class="md-text-field md-text-field--terisi">
+          <span class="md-text-field__label">Tag tool</span>
+          <select id="input-tag" data-uji="tugas-tag">
+            <option value="">Tanpa tag</option>
+          </select>
+          <span class="msr md-text-field__trailing">arrow_drop_down</span>
+        </label>
+
+        <div class="md-dialog__actions">
+          <button type="button" class="md-text-button" data-uji="tugas-batal" id="tombol-batal">Batal</button>
+          <button type="submit" class="md-filled-button" data-uji="tugas-simpan" id="tombol-simpan" disabled>
+            Simpan
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
   </body>
 </html>

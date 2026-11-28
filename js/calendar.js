@@ -20,10 +20,7 @@ export function isoHariIni() {
   return formatIso(new Date());
 }
 
-/**
- * Grid 6 minggu × 7 hari untuk satu bulan (0–11), mulai Senin.
- * Sel tanggal tetangga tetap disertakan (tanda dalamBulan: false).
- */
+/** Grid 6 minggu × 7 hari untuk satu bulan (0–11), mulai Senin. */
 export function gridBulan(tahun, bulan) {
   const awal = new Date(tahun, bulan, 1);
   const geser = (awal.getDay() + 6) % 7; // Senin=0 … Minggu=6
@@ -51,4 +48,18 @@ export function geserHari(iso, n) {
   const [y, m, d] = iso.split("-").map(Number);
   const t = new Date(y, m - 1, d + n);
   return formatIso(t);
+}
+
+/** Geser bulan dengan pembungkusan tahun, dipakai semua tampilan kalender. */
+export function geserBulan(tahun, bulan, n) {
+  let b = bulan + n;
+  let t = tahun;
+  if (b < 0) {
+    b = 11;
+    t--;
+  } else if (b > 11) {
+    b = 0;
+    t++;
+  }
+  return { tahun: t, bulan: b };
 }

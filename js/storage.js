@@ -1,7 +1,6 @@
 // Lapisan penyimpanan local.
 // Struktur payload sengaja lengkap dari awal (skema v1) supaya
-// sinkronisasi antar perangkat nanti tinggal menambah field "syncedAt"
-// tanpa migrasi yang merusak data.
+// sinkronisasi antar perangkat nanti tinggal menambah field "syncedAt".
 
 const KUNCI_TUGAS = "terraverse.tasks";
 const KUNCI_TUJUAN = "terraverse.planning";
@@ -40,10 +39,7 @@ export function muatTujuan() {
 }
 
 export function simpanTujuan(tujuan) {
-  localStorage.setItem(
-    KUNCI_TUJUAN,
-    JSON.stringify({ schemaVersion: 1, tujuan })
-  );
+  localStorage.setItem(KUNCI_TUJUAN, JSON.stringify({ schemaVersion: 1, tujuan }));
 }
 
 /* ---------- Tema ---------- */
@@ -81,7 +77,6 @@ export function unduhEkspor() {
 /**
  * Mengimpor file ekspor dan MENGGANTIKAN data lokal.
  * Validasi minimal: tasks & tujuan harus berupa array.
- * Mengembalikan { tasks, tujuan } yang sudah bersih, null jika tidak valid.
  */
 export function imporBersih(teksJson) {
   let data;
